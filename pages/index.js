@@ -1,65 +1,63 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Link from "next/link";
+import Image from "next/image";
+import { gql, GraphQLClient } from "graphql-request";
 
-export default function Home() {
+import Layout from "../components/Layout";
+import { formatPrice } from "../components/helper";
+
+const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
+
+export async function getStaticProps() {
+  const { products } = await graphcms.request(
+    gql`
+      {
+        products {
+          id
+          name
+          price
+          slug
+          images {
+            id
+            url
+            fileName
+            height
+            width
+          }
+        }
+      }
+    `
+  );
+
+  return {
+    props: {
+      products,
+    },
+  };
+}
+
+export default function Home({ products }) {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
-  )
+    <Layout title="NextJS GraphCMS Stripe Checkout">
+      <ul className="text-xl bg-white rounded-md shadow-md p-5">
+        {products.map(({ id, name, price, slug, images }) => {
+          return (
+            <li key={id} className="flex items-start gap-5">
+              <Image
+                src={images[0].url}
+                width={images[0].width}
+                height={images[0].height}
+                alt={images[0].fileName}
+              />
+              <div>
+                <Link key={id} href={`products/${slug}`}>
+                  <a>{name}</a>
+                </Link>
+                <div className="font-bold mt-3">{formatPrice(price)}</div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </Layout>
+  );
 }
