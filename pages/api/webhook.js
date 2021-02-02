@@ -17,13 +17,17 @@ export default async (req, res) => {
   const line_items = session.line_items.data;
   const customer = session.customer;
 
-  const { order } = await graphcms.request(
+  /**
+   * create order
+   */
+  const { createOrder } = await graphcms.request(
     gql`
       mutation createOrderMutation($data: OrderCreateInput!) {
         createOrder(data: $data) {
           id
-          email
-          total
+          orderItems {
+            id
+          }
         }
       }
     `,
@@ -48,5 +52,45 @@ export default async (req, res) => {
       },
     }
   );
+
+  /**
+   * publish order
+   */
+  await graphcms.request(
+    gql`
+      mutation publishOrder($id: ID!) {
+        publishOrder(where: { id: $id }, to: PUBLISHED) {
+          stage
+        }
+      }
+    `,
+    {
+      id: createOrder.id,
+    }
+  );
+
+  /**
+   * publish order items
+   */
+  const publishOrderItem = async (id) =>
+    await graphcms.request(
+      gql`
+        mutation publishOrder($id: ID!) {
+          publishOrderItem(where: { id: $id }, to: PUBLISHED) {
+            stage
+          }
+        }
+      `,
+      {
+        id,
+      }
+    );
+
+  const promises = createOrder.orderItems.map((orderItem) =>
+    publishOrderItem(orderItem.id)
+  );
+
+  await Promise.all(promises);
+
   res.json({ message: "success" });
 };

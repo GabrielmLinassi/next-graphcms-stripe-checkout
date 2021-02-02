@@ -42,12 +42,14 @@ export default function Home({ products }) {
         {products.map(({ id, name, price, slug, images }) => {
           return (
             <li key={id} className="flex items-start gap-5">
-              <Image
-                src={images[0].url}
-                width={images[0].width}
-                height={images[0].height}
-                alt={images[0].fileName}
-              />
+              {images.length > 0 && (
+                <Image
+                  src={images[0].url}
+                  width={images[0].width}
+                  height={images[0].height}
+                  alt={images[0].fileName}
+                />
+              )}
               <div>
                 <Link key={id} href={`products/${slug}`}>
                   <a>{name}</a>
