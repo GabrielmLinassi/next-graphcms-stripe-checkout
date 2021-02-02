@@ -18,7 +18,11 @@ export async function getStaticProps() {
           slug
           images {
             id
-            url
+            url(
+              transformation: {
+                image: { resize: { width: 500, height: 500, fit: crop } }
+              }
+            )
             fileName
             height
             width
@@ -38,15 +42,18 @@ export async function getStaticProps() {
 export default function Home({ products }) {
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">
-      <ul className="text-xl bg-white rounded-md shadow-md p-5">
+      <ul className="text-xl  p-5 grid grid-cols-3 gap-5">
         {products.map(({ id, name, price, slug, images }) => {
           return (
-            <li key={id} className="flex items-start gap-5">
+            <li
+              key={id}
+              className="flex flex-col items-center gap-5 bg-white rounded-md shadow-md p-5"
+            >
               {images.length > 0 && (
                 <Image
                   src={images[0].url}
-                  width={images[0].width}
-                  height={images[0].height}
+                  width={200}
+                  height={200}
                   alt={images[0].fileName}
                 />
               )}
