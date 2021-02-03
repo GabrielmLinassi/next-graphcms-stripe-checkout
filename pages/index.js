@@ -52,8 +52,8 @@ export default function Home({ products }) {
               {images.length > 0 && (
                 <Image
                   src={images[0].url}
-                  width={200}
-                  height={200}
+                  width={500} // could be images[0].width however value is 1000
+                  height={500} // could be images[0].height however value is 1000
                   alt={images[0].fileName}
                 />
               )}
