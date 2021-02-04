@@ -42,7 +42,7 @@ export async function getStaticProps() {
 export default function Home({ products }) {
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">
-      <ul className="text-xl  p-5 grid grid-cols-3 gap-5">
+      <ul className="text-xl my-10 grid grid-cols-3 gap-5">
         {products.map(({ id, name, price, slug, images }) => {
           return (
             <li

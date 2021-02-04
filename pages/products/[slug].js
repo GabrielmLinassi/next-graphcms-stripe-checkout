@@ -4,6 +4,10 @@ import { gql, GraphQLClient } from "graphql-request";
 import Layout from "../../components/Layout";
 import { formatPrice } from "../../components/helper";
 import { loadStripe } from "@stripe/stripe-js";
+import { useContext, useEffect, useState } from "react";
+
+/* context */
+import { Context } from "contexts/context";
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_KEY);
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
@@ -61,6 +65,7 @@ export async function getStaticProps({ params }) {
 
 const ProductPage = ({ product }) => {
   const { slug, name, price, description, images } = product;
+  const [quantity, setQuantity] = useState(1);
 
   return (
     <Layout>
@@ -84,15 +89,19 @@ const ProductPage = ({ product }) => {
             ))}
           </div>
           <div>
-            <div>{name}</div>
-            <div className="font-bold">{formatPrice(price)}</div>
-          </div>
-          <div>
-            <div>
-              <label htmlFor="">Amount</label>
-              <input type="number" className="border border-black" />
+            <div className="text-left">{name}</div>
+            <div className="font-bold text-left mt-3">{formatPrice(price)}</div>
+            <div className="text-left mt-5">
+              <label>Amount</label>
+              <input
+                type="number"
+                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                value={quantity}
+                className="border border-black p-1 w-full"
+              />
             </div>
-            <PayButton slug={slug} />
+            <PayButton slug={slug} quantity={quantity} />
+            <AddCart slug={slug} quantity={quantity} />
           </div>
         </div>
         <div className="mt-3 text-lg">{description}</div>
@@ -101,7 +110,24 @@ const ProductPage = ({ product }) => {
   );
 };
 
-const PayButton = ({ slug }) => {
+const AddCart = ({ slug, quantity }) => {
+  const { addCart } = useContext(Context);
+
+  const handleClick = () => {
+    addCart(slug, quantity);
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      className="inline-block bg-blue-100 hover:bg-blue-200 text-blue-500 rounded-md px-4 py-2 w-full mt-2"
+    >
+      Add Cart
+    </button>
+  );
+};
+
+const PayButton = ({ slug, quantity }) => {
   const handleClick = async () => {
     const stripe = await stripePromise;
 
@@ -112,6 +138,7 @@ const PayButton = ({ slug }) => {
       },
       body: JSON.stringify({
         slug,
+        quantity,
       }),
     }).then((res) => res.json());
 
@@ -123,7 +150,7 @@ const PayButton = ({ slug }) => {
   return (
     <button
       onClick={handleClick}
-      className="inline-block bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600"
+      className="inline-block bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 w-full mt-2"
     >
       Buy
     </button>

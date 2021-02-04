@@ -5,7 +5,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
 export default async (req, res) => {
-  const { slug } = req.body;
+  const { slug, quantity } = req.body;
 
   const { product } = await graphcms.request(
     gql`
@@ -25,7 +25,7 @@ export default async (req, res) => {
       }
     `,
     {
-      slug: slug,
+      slug,
     }
   );
 
@@ -47,7 +47,7 @@ export default async (req, res) => {
               },
             },
           },
-          quantity: 1,
+          quantity,
         },
       ],
     });
