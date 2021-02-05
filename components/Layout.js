@@ -13,7 +13,11 @@ export default function Layout({ children, title }) {
       <header className="bg-yellow-200 text-black shadow-md py-5">
         <nav className="max-w-4xl m-auto">
           <ul className="flex items-center justify-between">
-            <li className="text-xl font-bold">Sample Checkout</li>
+            <li className="text-xl font-bold">
+              <Link href="/">
+                <a>Sample Checkout</a>
+              </Link>
+            </li>
             <li>
               <Link href="/cart">
                 <a>Cart</a>

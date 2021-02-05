@@ -5,12 +5,13 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
 export default async (req, res) => {
-  const { slug, quantity } = req.body;
+  const { products: reqProducts } = req.body;
 
-  const { product } = await graphcms.request(
+  const { products } = await graphcms.request(
     gql`
-      query ProductPageQuery($slug: String!) {
-        product(where: { slug: $slug }) {
+      query ProductPageQuery($slugs: [String!]) {
+        products(where: { slug_in: $slugs }) {
+          slug
           name
           price
           description
@@ -25,31 +26,31 @@ export default async (req, res) => {
       }
     `,
     {
-      slug,
+      slugs: reqProducts.map((reqProduct) => reqProduct.slug),
     }
   );
 
   try {
     const session = await stripe.checkout.sessions.create({
       success_url: `${process.env.APP_URL}/summary/{CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.APP_URL}/products/${slug}`,
+      cancel_url: `${process.env.APP_URL}`,
       mode: "payment",
       payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            unit_amount: product.price,
-            currency: "USD",
-            product_data: {
-              name: product.name,
-              metadata: {
-                productSlug: slug,
-              },
+      line_items: products.map((product) => ({
+        price_data: {
+          unit_amount: product.price,
+          currency: "USD",
+          product_data: {
+            name: product.name,
+            metadata: {
+              productSlug: product.slug,
             },
           },
-          quantity,
         },
-      ],
+        quantity: reqProducts.find(
+          (reqProduct) => reqProduct.slug === product.slug
+        ).quantity,
+      })),
     });
     res.statusCode = 200;
     res.json(session);

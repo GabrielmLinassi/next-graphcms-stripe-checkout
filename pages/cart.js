@@ -1,4 +1,5 @@
 import Layout from "components/Layout";
+import { PayButton } from "components/PayBtn";
 import { Context } from "contexts/context";
 import { gql, GraphQLClient } from "graphql-request";
 import { useContext, useEffect, useState } from "react";
@@ -40,6 +41,11 @@ export default function Cart() {
           </>
         ))}
       </div>
+      {cart.length && (
+        <div className="flex items-end justify-end mt-5">
+          <PayButton products={cart} />
+        </div>
+      )}
     </Layout>
   );
 }
