@@ -32,7 +32,7 @@ const PayButton = ({ products, full = false }) => {
       onClick={handleClick}
       className={`inline-block bg-blue-500 text-white rounded-md px-4 py-2 hover:bg-blue-600 ${
         full && "w-full"
-      } mt-2`}
+      }`}
     >
       Buy
     </button>

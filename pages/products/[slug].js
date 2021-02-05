@@ -7,8 +7,13 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useContext, useEffect, useState } from "react";
 import { PayButton } from "components/PayBtn";
 
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+
 /* context */
 import { Context } from "contexts/context";
+import BackBtn from "components/BackBtn";
 
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
@@ -69,24 +74,11 @@ const ProductPage = ({ product }) => {
 
   return (
     <Layout>
-      <Link href="/">
-        <a className="inline-flex items-center px-3 py-1 rounded-md cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700">
-          <IconLeft />
-          <span className="ml-2">Back</span>
-        </a>
-      </Link>
+      <BackBtn />
       <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3">
         <div className="flex">
-          <div className="flex flex-col">
-            {images.map((image) => (
-              <Image
-                key={image.id}
-                src={image.url}
-                width={image.width}
-                height={image.height}
-                alt={image.fileName}
-              />
-            ))}
+          <div className="w-8/12">
+            <Images images={images} />
           </div>
           <div>
             <div className="text-left">{name}</div>
@@ -100,11 +92,13 @@ const ProductPage = ({ product }) => {
                 className="border border-black p-1 w-full"
               />
             </div>
-            <PayButton products={[{ slug: slug, quantity: quantity }]} full />
+            <div className="mt-5">
+              <PayButton products={[{ slug: slug, quantity: quantity }]} full />
+            </div>
             <AddCart slug={slug} quantity={quantity} />
           </div>
         </div>
-        <div className="mt-3 text-lg">{description}</div>
+        <div className="mt-16 text-lg">{description}</div>
       </div>
     </Layout>
   );
@@ -141,6 +135,30 @@ const IconLeft = () => {
         d="M257.5 445.1l-22.2 22.2c-9.4 9.4-24.6 9.4-33.9 0L7 273c-9.4-9.4-9.4-24.6 0-33.9L201.4 44.7c9.4-9.4 24.6-9.4 33.9 0l22.2 22.2c9.5 9.5 9.3 25-.4 34.3L136.6 216H424c13.3 0 24 10.7 24 24v32c0 13.3-10.7 24-24 24H136.6l120.5 114.8c9.8 9.3 10 24.8.4 34.3z"
       />
     </svg>
+  );
+};
+
+const Images = ({ images }) => {
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
+  return (
+    <Slider {...settings}>
+      {images.map((image) => (
+        <Image
+          key={image.id}
+          src={image.url}
+          width={300}
+          height={300}
+          alt={image.fileName}
+        />
+      ))}
+    </Slider>
   );
 };
 

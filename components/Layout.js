@@ -25,7 +25,7 @@ export default function Layout({ children, title }) {
           </ul>
         </nav>
       </header>
-      <main className="max-w-4xl m-auto">{children}</main>
+      <main className="max-w-4xl m-auto mt-10">{children}</main>
     </>
   );
 }
