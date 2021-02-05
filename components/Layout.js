@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
+import { CartIcon } from "./CartIcon";
 
 export default function Layout({ children, title }) {
   return (
@@ -19,9 +20,7 @@ export default function Layout({ children, title }) {
               </Link>
             </li>
             <li>
-              <Link href="/cart">
-                <a>Cart</a>
-              </Link>
+              <CartIcon />
             </li>
           </ul>
         </nav>
