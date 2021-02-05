@@ -17,6 +17,7 @@ export default function Cart() {
       gql`
         query ProductListQuery($slugs: [String!]) {
           products(where: { slug_in: $slugs }) {
+            id
             name
             slug
           }
@@ -33,12 +34,14 @@ export default function Cart() {
     <Layout>
       <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3">
         {products.map((product) => (
-          <>
-            <div>
-              {cart.find((cartItem) => cartItem.slug === product.slug).quantity}{" "}
-              x {product.name}
-            </div>
-          </>
+          <div key={product.id}>
+            {
+              cart.find((cartItem) => {
+                return cartItem.slug === product.slug;
+              }).quantity
+            }{" "}
+            x {product.name}
+          </div>
         ))}
       </div>
       {cart.length && (

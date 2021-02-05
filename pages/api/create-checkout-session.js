@@ -52,6 +52,7 @@ export default async (req, res) => {
         ).quantity,
       })),
     });
+
     res.statusCode = 200;
     res.json(session);
   } catch (e) {
