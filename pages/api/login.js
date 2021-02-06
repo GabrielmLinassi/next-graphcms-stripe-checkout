@@ -2,7 +2,7 @@ import { initAuth0 } from "@auth0/nextjs-auth0";
 
 export default async function login(req, res) {
   try {
-    // await auth0.handleLogin(req, res);
+    await initAuth0().handleLogin(req, res);
     res.status(200);
     res.send({ message: "login working" });
   } catch (error) {
