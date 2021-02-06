@@ -6,7 +6,9 @@ const ContextProvider = (props) => {
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    setCart(JSON.parse(localStorage.getItem("cart")));
+    if (localStorage.getItem("cart") !== null) {
+      setCart(JSON.parse(localStorage.getItem("cart")));
+    }
   }, []);
 
   useEffect(() => {

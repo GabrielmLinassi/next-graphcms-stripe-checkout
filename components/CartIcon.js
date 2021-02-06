@@ -4,12 +4,13 @@ import { Context } from "contexts/context";
 
 const CartIcon = () => {
   const { cart } = useContext(Context);
+  console.log(cart);
 
   return (
     <Link href="/cart">
       <a>
-        <div className="relative bg-white p-3 rounded-full shadow-md">
-          {cart.length > 0 && (
+        <div className="relative p-3">
+          {cart?.length > 0 && (
             <span className="absolute -left-3 top-1 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-white">
               {cart.length}
             </span>
