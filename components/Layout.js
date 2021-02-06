@@ -36,25 +36,25 @@ const Navbar = () => {
         <li className="mr-5">
           {user ? (
             <div className="flex items-center">
-              <div class="flex justify-center items-center p-5">
-                <div class="relative">
+              <div className="flex justify-center items-center p-5">
+                <div className="relative">
                   <button
                     onClick={() => setOpen(!open)}
-                    class="block h-12 w-12 rounded-full overflow-hidden focus:outline-none"
+                    className="block h-12 w-12 rounded-full overflow-hidden focus:outline-none"
                   >
                     <img
-                      class="h-full w-full object-cover"
+                      className="h-full w-full object-cover"
                       src={user.picture}
                       alt="avatar"
                     />
                   </button>
                   <div
-                    class={`${
+                    className={`${
                       !open && "hidden"
                     } absolute left-0 w-40 mt-2 py-2 bg-white border rounded shadow-xl`}
                   >
                     <Link href="/api/logout">
-                      <a class="transition-colors duration-200 block px-4 py-2 text-normal text-gray-900 rounded hover:bg-purple-500 hover:text-white">
+                      <a className="transition-colors duration-200 block px-4 py-2 text-normal text-gray-900 rounded hover:bg-purple-500 hover:text-white">
                         Logout
                       </a>
                     </Link>

@@ -12,8 +12,6 @@ function AuthProvider({ children }) {
       const response = await fetch("/api/me");
       const profile = await response.json();
 
-      console.log(profile);
-
       if (profile.error) {
         setUser(null);
       } else {

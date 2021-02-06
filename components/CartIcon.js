@@ -4,7 +4,6 @@ import { Context } from "contexts/context";
 
 const CartIcon = () => {
   const { cart } = useContext(Context);
-  console.log(cart);
 
   return (
     <Link href="/cart">
