@@ -6,8 +6,8 @@ export default initAuth0({
   clientSecret:
     "zVxWnWlF_N6nMmZ-yIaJU7NTb3G9poPECKtEXx3y2_bjwmsvKGThdux3x-VGCTp5",
   scope: "openid profile",
-  redirectUri: "http://localhost:3000/api/callback",
-  postLogoutRedirectUri: "http://localhost:3000",
+  redirectUri: "https://next-graphcms-stripe-checkout.vercel.app/api/callback",
+  postLogoutRedirectUri: "https://next-graphcms-stripe-checkout.vercel.app",
   session: {
     cookieSecret:
       "hsahhsadsadlkewrwerldlsfdf-03-4323-249tkiretkgbp-dsfsdf;sasapppppwq",
