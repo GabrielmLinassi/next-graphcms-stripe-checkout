@@ -7,9 +7,9 @@ import { loadStripe } from "@stripe/stripe-js";
 import { useContext, useEffect, useState } from "react";
 import { PayButton } from "components/PayBtn";
 
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-// import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 
 /* context */
 import { Context } from "contexts/context";
@@ -77,7 +77,9 @@ const ProductPage = ({ product }) => {
       <BackBtn />
       <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3">
         <div className="flex">
-          <div className="w-8/12">{/* <Images images={images} /> */}</div>
+          <div className="w-8/12">
+            <Images images={images} />
+          </div>
           <div>
             <div className="text-left">{name}</div>
             <div className="font-bold text-left mt-3">{formatPrice(price)}</div>
@@ -136,28 +138,28 @@ const IconLeft = () => {
   );
 };
 
-// const Images = ({ images }) => {
-//   var settings = {
-//     dots: true,
-//     infinite: true,
-//     speed: 500,
-//     slidesToShow: 1,
-//     slidesToScroll: 1,
-//   };
+const Images = ({ images }) => {
+  var settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
-//   return (
-//     <Slider {...settings}>
-//       {images.map((image) => (
-//         <Image
-//           key={image.id}
-//           src={image.url}
-//           width={300}
-//           height={300}
-//           alt={image.fileName}
-//         />
-//       ))}
-//     </Slider>
-//   );
-// };
+  return (
+    <Slider {...settings}>
+      {images.map((image) => (
+        <Image
+          key={image.id}
+          src={image.url}
+          width={300}
+          height={300}
+          alt={image.fileName}
+        />
+      ))}
+    </Slider>
+  );
+};
 
 export default ProductPage;
