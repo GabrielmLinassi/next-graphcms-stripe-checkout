@@ -22,7 +22,7 @@ export default function Layout({ children, title }) {
 }
 
 const Navbar = () => {
-  // const { user } = useAuth();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
 
   return (
@@ -34,7 +34,7 @@ const Navbar = () => {
       </div>
       <ul className="flex items-center">
         <li className="mr-5">
-          {/* {user ? (
+          {user ? (
             <div className="flex items-center">
               <div className="flex justify-center items-center p-5">
                 <div className="relative">
@@ -69,7 +69,7 @@ const Navbar = () => {
                 Login
               </a>
             </Link>
-          )} */}
+          )}
         </li>
         <li>
           <CartIcon />
