@@ -20,5 +20,7 @@
     "stripe": "^8.132.0",
     "tailwindcss": "^2.0.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "tslib": "^2.1.0"
+  }
 }
