@@ -53,6 +53,11 @@ const Navbar = () => {
                       !open && "hidden"
                     } absolute left-0 w-40 mt-2 py-2 bg-white border rounded shadow-xl`}
                   >
+                    <Link href="/orders">
+                      <a className="transition-colors duration-200 block px-4 py-2 text-normal text-gray-900 rounded hover:bg-purple-500 hover:text-white">
+                        My Orders
+                      </a>
+                    </Link>
                     <Link href="/api/logout">
                       <a className="transition-colors duration-200 block px-4 py-2 text-normal text-gray-900 rounded hover:bg-purple-500 hover:text-white">
                         Logout
@@ -60,7 +65,7 @@ const Navbar = () => {
                     </Link>
                   </div>
                 </div>
-                <div className="ml-3">Gabriel</div>
+                <div className="ml-3">{user.nickname}</div>
               </div>
             </div>
           ) : (

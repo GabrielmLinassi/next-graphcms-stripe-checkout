@@ -36,6 +36,7 @@ export default async (req, res) => {
         email: customer.email,
         total: session.amount_total,
         stripeCheckoutId: session.id,
+        customerId: session.metadata.customerId,
         orderItems: {
           create: line_items.map((li) => {
             return {

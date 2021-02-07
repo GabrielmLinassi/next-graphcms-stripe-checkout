@@ -4,8 +4,11 @@ import Stripe from "stripe";
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
-export default async (req, res) => {
+import auth0 from "./utils/auth0";
+
+export default auth0.requireAuthentication(async (req, res) => {
   const { products: reqProducts } = req.body;
+  const { user } = await auth0.getSession(req);
 
   const { products } = await graphcms.request(
     gql`
@@ -36,6 +39,9 @@ export default async (req, res) => {
       cancel_url: `${process.env.APP_URL}`,
       mode: "payment",
       payment_method_types: ["card"],
+      metadata: {
+        customerId: user.sub,
+      },
       line_items: products.map((product) => ({
         price_data: {
           unit_amount: product.price,
@@ -60,4 +66,4 @@ export default async (req, res) => {
     res.statusCode = 400;
     res.json({ error: { message: e } });
   }
-};
+});

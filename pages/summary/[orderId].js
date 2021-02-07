@@ -13,26 +13,32 @@ export default function SummaryPage({ order }) {
         <BackBtn title="Back home" />
         <h1 className="text-2xl font-bold mt-3">Order Summary</h1>
         <ul className="bg-white p-5 rounded-md shadow-md mt-3">
-          {order.orderItems.map((orderItem) => (
-            <li key={orderItem.id} className="flex gap-5">
-              <img
-                src={orderItem.product.images[0].url}
-                alt={orderItem.product.images[0].fileName}
-                width={100}
-                height={100}
-              />
-              <div>
-                <div>
-                  {orderItem.quantity} x {orderItem.product.name}
-                </div>
-                <div className="mt-2">{formatPrice(orderItem.price)}</div>
-              </div>
-            </li>
-          ))}
-          <li className="border-t-2 pt-3 mt-5 text-right">
-            <span className="font-bold">Total Order:</span>{" "}
-            {formatPrice(order.total)}
-          </li>
+          {order ? (
+            <>
+              {order.orderItems.map((orderItem) => (
+                <li key={orderItem.id} className="flex gap-5">
+                  <img
+                    src={orderItem.product.images[0].url}
+                    alt={orderItem.product.images[0].fileName}
+                    width={100}
+                    height={100}
+                  />
+                  <div>
+                    <div>
+                      {orderItem.quantity} x {orderItem.product.name}
+                    </div>
+                    <div className="mt-2">{formatPrice(orderItem.price)}</div>
+                  </div>
+                </li>
+              ))}
+              <li className="border-t-2 pt-3 mt-5 text-right">
+                <span className="font-bold">Total Order:</span>{" "}
+                {formatPrice(order.total)}
+              </li>
+            </>
+          ) : (
+            <div className="text-2xl w-full text-center">Order not found</div>
+          )}
         </ul>
       </Layout>
     );
