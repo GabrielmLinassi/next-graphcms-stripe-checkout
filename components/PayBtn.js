@@ -5,7 +5,7 @@ import { useContext } from "react";
 const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_KEY);
 
 const PayButton = ({ products, full = false }) => {
-  const { clearCart } = useContext(Context);
+  // const { clearCart } = useContext(Context);
 
   const handleClick = async () => {
     const stripe = await stripePromise;
@@ -20,7 +20,7 @@ const PayButton = ({ products, full = false }) => {
       }),
     }).then((res) => res.json());
 
-    clearCart();
+    // clearCart();
 
     await stripe.redirectToCheckout({
       sessionId: session.id,

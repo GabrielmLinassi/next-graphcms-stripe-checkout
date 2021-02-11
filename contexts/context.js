@@ -1,47 +1,101 @@
 import { createContext, useEffect, useState } from "react";
+import produce from "immer";
+import { useAuth } from "contexts/auth";
 
 export const Context = createContext();
 
-const ContextProvider = (props) => {
+const ContextProvider = ({ children }) => {
+  const { user } = useAuth();
+  const [carts, setCarts] = useState([]);
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
-    if (localStorage.getItem("cart") !== null) {
-      setCart(JSON.parse(localStorage.getItem("cart")));
+    if (user) {
+      const syncedCarts = JSON.parse(localStorage.getItem("Carts")) || [];
+      const hasUserCart = syncedCarts.find((x) => x.user === user.sub);
+
+      hasUserCart
+        ? setCarts(syncedCarts)
+        : setCarts([{ user: user.sub, items: [] }]);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
+    if (carts.length) {
+      localStorage.setItem("Carts", JSON.stringify(carts));
+
+      console.log("carts ==>", carts);
+
+      setCart(() => {
+        const cart = carts.find((cart) => cart.user === user.sub);
+        const cartItems = cart.items;
+        return cartItems;
+      });
+    }
+  }, [carts]);
 
   const addCart = (slug, quantity) => {
-    const idx = cart.findIndex((cartProduct) => cartProduct.slug === slug);
-    if (idx !== -1) {
-      const repeatedProd = cart[idx];
-      setCart([
-        ...cart.slice(0, idx),
-        { ...repeatedProd, quantity: repeatedProd.quantity + quantity },
-        ...cart.slice(idx + 1),
-      ]);
+    if (!user) {
+      return;
+    }
+
+    const userCart = carts.find((cart) => cart.user === user.sub);
+    const idxUserCart = carts.indexOf(userCart);
+    const repeatedItem = userCart.items?.find((item) => item.slug === slug);
+    const idxRepeatedItem = userCart.items.indexOf(repeatedItem);
+
+    if (idxRepeatedItem > -1) {
+      const newState = produce(carts, (draftState) => {
+        draftState[idxUserCart].items[idxRepeatedItem] = {
+          slug: slug,
+          quantity:
+            draftState[idxUserCart].items[idxRepeatedItem].quantity + quantity,
+        };
+      });
+      setCarts(newState);
     } else {
-      setCart([
-        ...cart,
-        {
-          slug,
-          quantity,
-        },
-      ]);
+      const newState = produce(carts, (draftState) => {
+        draftState[idxUserCart].items.push({ slug, quantity });
+      });
+      setCarts(newState);
     }
   };
 
   const clearCart = () => {
-    localStorage.setItem("cart", JSON.stringify([]));
+    const userCart = carts.find((cart) => cart.user === user.sub);
+    const idxUserCart = carts.indexOf(userCart);
+
+    const newState = produce(carts, (draftState) => {
+      draftState[idxUserCart].items = [];
+    });
+    setCarts(newState);
+  };
+
+  const removeCartItem = (slug) => {
+    const userCart = carts.find((cart) => cart.user === user.sub);
+    const idxUserCart = carts.indexOf(userCart);
+    const item = userCart.items.find((item) => item.slug === slug);
+
+    const newState = produce(carts, (draftState) => {
+      draftState = [
+        ...draftState.slice(0, idxUserCart),
+        {
+          ...draftState[idxUserCart],
+          items: draftState[idxUserCart].items.filter(
+            (item) => item.slug !== slug
+          ),
+        },
+        ...draftState.slice(idxUserCart + 1),
+      ];
+      return draftState;
+    });
+
+    setCarts(newState);
   };
 
   return (
-    <Context.Provider value={{ cart, addCart, clearCart }}>
-      {props.children}
+    <Context.Provider value={{ cart, addCart, clearCart, removeCartItem }}>
+      {children}
     </Context.Provider>
   );
 };

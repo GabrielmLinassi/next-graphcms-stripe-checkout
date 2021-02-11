@@ -5,14 +5,29 @@ import { Context } from "contexts/context";
 import { PayButton } from "components/PayBtn";
 import Layout from "components/Layout";
 import { formatPrice } from "components/helper";
+import { useAuth } from "contexts/auth";
+import Link from "next/link";
 
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
 export default function Cart() {
   const [products, setProducts] = useState([]);
-  const { cart } = useContext(Context);
+  const { cart, clearCart, removeCartItem } = useContext(Context);
+  const { user } = useAuth();
+  const [customerId, setCustomerId] = useState();
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+    setCustomerId(user.sub);
+  }, [user]);
 
   useEffect(async () => {
+    if (cart.length < 1) {
+      return;
+    }
+
     const data = await graphcms.request(
       gql`
         query ProductListQuery($slugs: [String!]) {
@@ -31,7 +46,7 @@ export default function Cart() {
         }
       `,
       {
-        slugs: getSlugs(cart),
+        slugs: getSlugs(cart, customerId),
       }
     );
     setProducts(data.products);
@@ -42,10 +57,21 @@ export default function Cart() {
       {cart?.length > 0 ? (
         products.length > 0 ? (
           <>
-            <Products products={products} cart={cart} />
-            <div className="flex items-center justify-end mt-5">
-              <Total products={products} cart={cart} />
-              <PayButton products={cart} />
+            <Products
+              products={products}
+              cart={cart}
+              removeCartItem={removeCartItem}
+            />
+            <div className="flex items-center justify-between mt-5">
+              <button onClick={() => clearCart()}>Clear Cart</button>
+              <div className="flex items-center">
+                <Total
+                  products={products}
+                  cart={cart}
+                  customerId={customerId}
+                />
+                <PayButton products={cart} />
+              </div>
             </div>
           </>
         ) : (
@@ -62,7 +88,11 @@ export default function Cart() {
   );
 }
 
-const getSlugs = (cart) => cart.map((cartItem) => cartItem.slug);
+const getSlugs = (cart, customerId) => {
+  // get the slugs for the correct customerId
+  const slugs = cart.map((x) => x.slug);
+  return slugs;
+};
 
 const CartLayout = ({ children }) => (
   <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3">
@@ -70,21 +100,23 @@ const CartLayout = ({ children }) => (
   </div>
 );
 
-const Products = ({ products, cart }) => {
+const Products = ({ products, cart, removeCartItem }) => {
   const getQuantity = (slug) => {
-    const item = cart.find((cartItem) => cartItem.slug === slug);
-    return item.quantity;
+    const product = cart.find((x) => x.slug === slug);
+    const quantity = product?.quantity || 0;
+    return quantity;
   };
 
   return products.map(({ id, slug, name, price, images }) => {
     const { url } = images[0];
     return (
-      <CartLayout>
-        <div key={id} className="flex items-center gap-5">
+      <CartLayout key={id}>
+        <div className="flex items-center gap-5">
           <Image src={url} width={150} height={150} />
           <div className="flex flex-col items-start">
             {getQuantity(slug)} x {name}
             <div className="font-bold">{formatPrice(price)}</div>
+            <a onClick={() => removeCartItem(slug)}>Remove Item</a>
           </div>
         </div>
       </CartLayout>
@@ -96,9 +128,8 @@ const Total = ({ products, cart }) => {
   var total = 0;
 
   products.forEach((product) => {
-    const quantity = cart.find((cartItem) => cartItem.slug === product.slug)
-      .quantity;
-
+    const item = cart.find((cartItem) => cartItem.slug === product.slug);
+    const quantity = item?.quantity || 0;
     total = total + quantity * product.price;
   });
 
