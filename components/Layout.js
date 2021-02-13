@@ -16,7 +16,7 @@ export default function Layout({ children, title }) {
       <header className="bg-yellow-200 text-black shadow-md py-5">
         <Navbar />
       </header>
-      <main className="max-w-4xl m-auto mt-10">{children}</main>
+      <main className="max-w-4xl m-auto my-10">{children}</main>
     </>
   );
 }

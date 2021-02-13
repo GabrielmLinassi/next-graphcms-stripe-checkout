@@ -1,0 +1,15 @@
+.ais-Hits {
+  @apply mt-10;
+}
+.ais-Hits-list {
+  @apply text-xl grid grid-cols-3 gap-5;
+}
+
+.ais-Hits-item {
+  @apply flex flex-col items-center gap-5 bg-white rounded-md shadow-md p-5;
+}
+
+.ais-SearchBox-submitIcon path,
+.ais-SearchBox-resetIcon path {
+  fill: red !important;
+}

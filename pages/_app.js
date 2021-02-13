@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../styles/index.css";
 import ContextProvider from "contexts/context";
 import { AuthProvider } from "contexts/auth";
 

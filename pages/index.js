@@ -3,15 +3,23 @@ import Image from "next/image";
 import { gql, GraphQLClient } from "graphql-request";
 import Layout from "../components/Layout";
 import { formatPrice } from "../components/helper";
+import { InstantSearch, SearchBox, Hits } from "react-instantsearch-dom";
+const algoliasearch = require("algoliasearch");
+// import "instantsearch.css/themes/algolia.css";
+import "instantsearch.css/themes/reset.css";
 
+const client = algoliasearch("MRLYG735R2", "553f555a65bcc73f82e29ffdc73e503b");
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
 export default function Home({ products }) {
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">
-      <ul className="text-xl my-10 grid grid-cols-3 gap-5">
-        <Products products={products} />
-      </ul>
+      <InstantSearch searchClient={client} indexName="products">
+        <SearchBox />
+        <Hits hitComponent={Hit} />
+        {/* <Products products={products} /> */}
+        {/* </ul> */}
+      </InstantSearch>
     </Layout>
   );
 }
@@ -40,6 +48,21 @@ const Products = ({ products }) => {
       </li>
     );
   });
+};
+
+const Hit = ({ hit: { objectID, name, price, slug, images } }) => {
+  return (
+    // <div className="flex flex-col items-center gap-5 bg-white rounded-md shadow-md p-5">
+    <Link key={objectID} href={`/products/${slug}`}>
+      <a>
+        {images.length && <Image src={images[0]} width={500} height={500} />}
+        <div>
+          {name}
+          <div className="font-bold mt-3">{formatPrice(price)}</div>
+        </div>
+      </a>
+    </Link>
+  );
 };
 
 const fetchProducts = gql`
