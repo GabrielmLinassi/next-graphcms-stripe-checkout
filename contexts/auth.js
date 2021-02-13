@@ -30,14 +30,16 @@ function AuthProvider({ children }) {
     // check new route is OK
     const handleRouteChange = (url) => {
       if (url !== "/" && !user) {
-        window.location.href = "/";
+        //window.location.href = "/";
       }
     };
 
+    console.log("pathname", pathname);
+
     // Check that initial route is OK
-    if (pathname !== "/" && user === null) {
+    /*if (pathname == "/" && user === null) {
       window.location.href = "/";
-    }
+    }*/
 
     // Monitor route changes
     events.on("routeChangeStart", handleRouteChange);

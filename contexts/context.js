@@ -16,7 +16,14 @@ const ContextProvider = ({ children }) => {
 
       hasUserCart
         ? setCarts(syncedCarts)
-        : setCarts([{ user: user.sub, items: [] }]);
+        : setCarts(() => {
+            return [...syncedCarts, { user: user.sub, items: [] }];
+          });
+    } else {
+      const syncedCarts = JSON.parse(localStorage.getItem("Carts")) || [];
+      const hasUserCart = syncedCarts.find((x) => x.user === "");
+
+      hasUserCart ? setCarts(syncedCarts) : setCarts([{ user: "", items: [] }]);
     }
   }, [user]);
 
@@ -27,37 +34,64 @@ const ContextProvider = ({ children }) => {
       console.log("carts ==>", carts);
 
       setCart(() => {
-        const cart = carts.find((cart) => cart.user === user.sub);
-        const cartItems = cart.items;
-        return cartItems;
+        if (user) {
+          const cart = carts.find((cart) => cart.user === user.sub);
+          const cartItems = cart.items;
+          return cartItems;
+        } else {
+          const cart = carts.find((cart) => cart.user === "");
+          const cartItems = cart.items;
+          return cartItems;
+        }
       });
     }
   }, [carts]);
 
   const addCart = (slug, quantity) => {
-    if (!user) {
-      return;
-    }
+    if (user) {
+      const userCart = carts.find((cart) => cart.user === user.sub);
+      const idxUserCart = carts.indexOf(userCart);
+      const repeatedItem = userCart.items?.find((item) => item.slug === slug);
+      const idxRepeatedItem = userCart.items.indexOf(repeatedItem);
 
-    const userCart = carts.find((cart) => cart.user === user.sub);
-    const idxUserCart = carts.indexOf(userCart);
-    const repeatedItem = userCart.items?.find((item) => item.slug === slug);
-    const idxRepeatedItem = userCart.items.indexOf(repeatedItem);
-
-    if (idxRepeatedItem > -1) {
-      const newState = produce(carts, (draftState) => {
-        draftState[idxUserCart].items[idxRepeatedItem] = {
-          slug: slug,
-          quantity:
-            draftState[idxUserCart].items[idxRepeatedItem].quantity + quantity,
-        };
-      });
-      setCarts(newState);
+      if (idxRepeatedItem > -1) {
+        const newState = produce(carts, (draftState) => {
+          draftState[idxUserCart].items[idxRepeatedItem] = {
+            slug: slug,
+            quantity:
+              draftState[idxUserCart].items[idxRepeatedItem].quantity +
+              quantity,
+          };
+        });
+        setCarts(newState);
+      } else {
+        const newState = produce(carts, (draftState) => {
+          draftState[idxUserCart].items.push({ slug, quantity });
+        });
+        setCarts(newState);
+      }
     } else {
-      const newState = produce(carts, (draftState) => {
-        draftState[idxUserCart].items.push({ slug, quantity });
-      });
-      setCarts(newState);
+      const userCart = carts.find((cart) => cart.user === "");
+      const idxUserCart = carts.indexOf(userCart);
+      const repeatedItem = userCart.items?.find((item) => item.slug === slug);
+      const idxRepeatedItem = userCart.items.indexOf(repeatedItem);
+
+      if (idxRepeatedItem > -1) {
+        const newState = produce(carts, (draftState) => {
+          draftState[idxUserCart].items[idxRepeatedItem] = {
+            slug: slug,
+            quantity:
+              draftState[idxUserCart].items[idxRepeatedItem].quantity +
+              quantity,
+          };
+        });
+        setCarts(newState);
+      } else {
+        const newState = produce(carts, (draftState) => {
+          draftState[idxUserCart].items.push({ slug, quantity });
+        });
+        setCarts(newState);
+      }
     }
   };
 
