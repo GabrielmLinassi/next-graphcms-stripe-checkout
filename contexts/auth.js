@@ -37,9 +37,9 @@ function AuthProvider({ children }) {
     console.log("pathname", pathname);
 
     // Check that initial route is OK
-    /*if (pathname == "/" && user === null) {
+    if (pathname == "/orders" && user === null) {
       window.location.href = "/";
-    }*/
+    }
 
     // Monitor route changes
     events.on("routeChangeStart", handleRouteChange);
