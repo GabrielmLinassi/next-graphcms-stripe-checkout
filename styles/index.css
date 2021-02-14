@@ -9,7 +9,27 @@
   @apply flex flex-col items-center gap-5 bg-white rounded-md shadow-md p-5;
 }
 
-.ais-SearchBox-submitIcon path,
-.ais-SearchBox-resetIcon path {
-  fill: red !important;
+/*product slider*/
+.slick-slider:first-of-type {
+  width: 25%;
+}
+
+.slick-slider:first-of-type .slick-slide > div > div {
+  border: solid 5px transparent;
+  padding: 10px;
+  outline: solid 1px rgba(0, 0, 0, 0.2);
+}
+
+.slick-slider:last-of-type {
+  width: 80%;
+}
+
+.slick-slider:last-of-type .slick-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slick-slider {
+  height: 356px;
 }
