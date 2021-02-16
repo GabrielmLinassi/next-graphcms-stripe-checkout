@@ -1,14 +1,14 @@
 import "../styles/globals.css";
 import "../styles/index.css";
-import ContextProvider from "contexts/context";
+import CartProvider from "contexts/CartProvider";
 import { AuthProvider } from "contexts/auth";
 
 function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
-      <ContextProvider>
+      <CartProvider>
         <Component {...pageProps} />
-      </ContextProvider>
+      </CartProvider>
     </AuthProvider>
   );
 }

@@ -1,12 +1,14 @@
-import { loadStripe } from "@stripe/stripe-js";
-import { useAuth } from "contexts/auth";
-import { Context } from "contexts/context";
 import { useContext } from "react";
+import { loadStripe } from "@stripe/stripe-js";
+
+import { useAuth } from "contexts/auth";
+import { CartContext } from "contexts/CartProvider";
+import { clearCart } from "reducers/CartReducer";
 
 const stripePromise = loadStripe(process.env.STRIPE_PUBLIC_KEY);
 
 const PayButton = ({ products, full = false }) => {
-  // const { clearCart } = useContext(Context);
+  const { dispatch } = useContext(CartContext);
   const { user } = useAuth();
 
   const handleClick = async () => {
@@ -26,7 +28,7 @@ const PayButton = ({ products, full = false }) => {
       }),
     }).then((res) => res.json());
 
-    // clearCart();
+    dispatch(clearCart());
 
     await stripe.redirectToCheckout({
       sessionId: session.id,

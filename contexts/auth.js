@@ -5,24 +5,23 @@ const AuthContext = createContext();
 
 function AuthProvider({ children }) {
   const { pathname, events } = useRouter();
-  const [user, setUser] = useState();
-
-  async function getUser() {
-    try {
-      const response = await fetch("/api/me");
-      const profile = await response.json();
-
-      if (profile.error) {
-        setUser(null);
-      } else {
-        setUser(profile);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    async function getUser() {
+      try {
+        const response = await fetch("/api/me");
+        const profile = await response.json();
+
+        if (profile.error) {
+          setUser(null);
+        } else {
+          setUser(profile);
+        }
+      } catch (err) {
+        console.log(err);
+      }
+    }
     getUser();
   }, [pathname]);
 

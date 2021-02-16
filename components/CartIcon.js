@@ -1,15 +1,16 @@
 import Link from "next/link";
 import { useContext } from "react";
-import { Context } from "contexts/context";
+
+import { CartContext } from "contexts/CartProvider";
 
 const CartIcon = () => {
-  const { cart } = useContext(Context);
+  const { cart } = useContext(CartContext);
 
   return (
     <Link href="/cart">
       <a>
         <div className="relative p-3">
-          {cart?.length > 0 && (
+          {cart?.length && (
             <span className="absolute -left-3 top-1 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-white">
               {cart.length}
             </span>
