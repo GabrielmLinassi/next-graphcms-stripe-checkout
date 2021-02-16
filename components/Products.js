@@ -22,7 +22,7 @@ const Products = ({ products, cart, removeCartItem }) => {
           <div className="flex flex-col items-start">
             {getQuantity(slug)} x {name}
             <div className="font-bold">{formatPrice(price)}</div>
-            <a onClick={() => removeCartItemHandler}>Remove Item</a>
+            <a onClick={removeCartItemHandler}>Remove Item</a>
           </div>
         </div>
       </CartLayout>
