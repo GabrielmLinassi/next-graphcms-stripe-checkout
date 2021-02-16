@@ -33,10 +33,8 @@ function AuthProvider({ children }) {
       }
     };
 
-    console.log("pathname", pathname);
-
     // Check that initial route is OK
-    if (pathname == "/orders" && user === null) {
+    if (["/orders", "/me"].includes(pathname) && user === null) {
       window.location.href = "/";
     }
 
