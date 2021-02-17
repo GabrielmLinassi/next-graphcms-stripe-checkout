@@ -1,12 +1,13 @@
-export const Field = ({ label, value, disabled }) => (
+export const Field = ({ label, name, value, disabled, register }) => (
   <>
     <label htmlFor={label}>{`${label}:`}</label>
     <input
-      name={label}
+      name={name}
+      ref={register}
       className="py-1 px-3 line border border-yellow-300"
-      placeholder=""
       disabled={disabled}
-      value={value}
+      readOnly={disabled}
+      defaultValue={value}
     />
   </>
 );
