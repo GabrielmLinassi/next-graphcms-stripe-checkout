@@ -1,3 +1,14 @@
+/**
+ *
+ * TODO: Add typeScript
+ *
+ * TODO: Add Testings (RTL)
+ *
+ * TODO: Look for a way to clean the code a bit more. Like separate the queries into a another file
+ *
+ */
+
+import React from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -7,103 +18,32 @@ import { Field } from "./Field";
 import { SaveButton } from "./SaveButton";
 import { Error } from "components/Error";
 
-const schema = yup.object().shape({
-  city: yup.string().required(),
-  state: yup.string().required(),
-  zipCode: yup.string().required(),
-  address: yup.string().required(),
-});
-
-const ADDRESS_QUERY = gql`
-  query UserAddress($userId: String!) {
-    addresses(where: { userId: $userId }) {
-      city
-      state
-      zipCode
-      address
-    }
-  }
-`;
-//FIXME: Alter createMutation to createOrUpdateMutation and its logic to create or update as required
-const CREATE_ADDRESS_MUTATION = gql`
-  mutation createMutation(
-    $city: String!
-    $state: String!
-    $zipCode: String!
-    $address: String!
-    $userId: String!
-  ) {
-    createAddress(
-      data: {
-        city: $city
-        state: $state
-        zipCode: $zipCode
-        address: $address
-        userId: $userId
-      }
-    ) {
-      id
-    }
-  }
-`;
-
-//FIXME: Look for a way to combine createAddress and publishAddress mutations since they're dependent
-const PUBLISH_ADDRESS_MUTATION = gql`
-  mutation mutate($userId: String!) {
-    publishAddress(where: { userId: $userId }, to: PUBLISHED) {
-      stage
-    }
-  }
-`;
-
 export const Address = ({ user }) => {
   if (!user) {
     return;
   }
 
-  const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(schema),
-  });
+  const {
+    createAddressHandler,
+    mutationError,
+    mutationLoading,
+    loading,
+    data,
+    error,
+  } = useAddress(user.sub);
 
-  const { loading, data, error } = useQuery(ADDRESS_QUERY, {
-    variables: {
-      userId: user.sub,
-    },
-  });
+  const { address, city, state, zipCode } = data;
 
-  const [
-    createAddress,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation(CREATE_ADDRESS_MUTATION, {
-    errorPolicy: "all",
-    onError: () => null,
-  });
-
-  const [
-    publishAddress,
-    { loading: mutationPublishLoading, error: mutationPublishError },
-  ] = useMutation(PUBLISH_ADDRESS_MUTATION, {
-    errorPolicy: "all",
-    onError: () => null,
-  });
+  const { errors, handleSubmit, register } = userAddressControler();
 
   if (loading) return <p>Loading...</p>;
 
   if (error) {
     console.log(JSON.stringify(error, null, 2));
-    return <p>Error :( </p>;
+    return <p>{`Error :(`}</p>;
   }
 
-  const { address, city, state, zipCode } = data.addresses[0];
-
-  const createAddressHandler = async (data) => {
-    await createAddress({ variables: { ...data, userId: user.sub } });
-    await publishAddress({ variables: { userId: user.sub } });
-  };
-
-  const onSubmit = (data) => {
-    createAddressHandler(data);
-  };
+  const onSubmit = (data) => createAddressHandler(data);
 
   return (
     <>
@@ -156,6 +96,7 @@ export const Address = ({ user }) => {
           </div>
         </div>
         <div className="flex justify-end mt-3">
+          {/* FIXME: Display loader on mutationLoading=true */}
           <SaveButton />
         </div>
       </form>
@@ -163,4 +104,94 @@ export const Address = ({ user }) => {
       {mutationError && <p>Error :( Please try again</p>}
     </>
   );
+};
+
+/* ------------------------ */
+
+const useAddress = (sub) => {
+  const ADDRESS_QUERY = gql`
+    query UserAddress($userId: String!) {
+      addresses(where: { userId: $userId }) {
+        city
+        state
+        zipCode
+        address
+      }
+    }
+  `;
+
+  const UPSERT_ADDRESS_MUTATION = gql`
+    mutation createOrUpdateMutation(
+      $userId: String!
+      $create: AddressCreateInput!
+      $update: AddressUpdateInput!
+    ) {
+      upsertAddress(
+        where: { userId: $userId }
+        upsert: { create: $create, update: $update }
+      ) {
+        city
+        state
+        zipCode
+        address
+        userId
+      }
+      publishAddress(where: { userId: $userId }, to: PUBLISHED) {
+        stage
+      }
+    }
+  `;
+
+  const [
+    createAddress,
+    { loading: mutationLoading, error: mutationError },
+  ] = useMutation(UPSERT_ADDRESS_MUTATION, {
+    errorPolicy: "all",
+    onError: () => null,
+  });
+
+  const { loading, data, error } = useQuery(ADDRESS_QUERY, {
+    variables: {
+      userId: sub,
+    },
+  });
+
+  const createAddressHandler = async (data) => {
+    await createAddress({
+      variables: {
+        userId: sub,
+        create: {
+          userId: sub,
+          ...data,
+        },
+        update: {
+          ...data,
+        },
+      },
+    });
+  };
+
+  return {
+    createAddressHandler,
+    mutationLoading,
+    mutationError,
+    loading,
+    data: data?.addresses ? data.addresses[0] : {},
+    error,
+  };
+};
+
+const userAddressControler = () => {
+  const schema = yup.object().shape({
+    city: yup.string().required(),
+    state: yup.string().required(),
+    zipCode: yup.string().required(),
+    address: yup.string().required(),
+  });
+
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  return { register, handleSubmit, errors };
 };

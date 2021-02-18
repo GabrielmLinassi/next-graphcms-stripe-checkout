@@ -2,7 +2,7 @@ import { useAuth } from "contexts/auth";
 
 import Layout from "components/Layout";
 import { Address } from "components/Address";
-// import { Profile } from "components/Profile";
+import { Profile } from "components/Profile";
 
 export default function Me() {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ export default function Me() {
 
   return (
     <Layout title="Profile">
-      {/* <Profile user={user} /> */}
+      <Profile user={user} />
       <Address user={user} />
     </Layout>
   );
