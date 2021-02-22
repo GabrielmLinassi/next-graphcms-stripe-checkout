@@ -1,7 +1,7 @@
 import { useAuth } from "contexts/auth";
 
 import Layout from "components/Layout";
-import { Address } from "components/Address";
+import { Address } from "components/Address.jsx";
 import { Profile } from "components/Profile";
 
 export default function Me() {
