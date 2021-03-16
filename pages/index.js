@@ -7,6 +7,7 @@ import { InstantSearch, SearchBox, Hits } from "react-instantsearch-dom";
 const algoliasearch = require("algoliasearch");
 // import "instantsearch.css/themes/algolia.css";
 import "instantsearch.css/themes/reset.css";
+import styled from "styled-components";
 
 const client = algoliasearch("MRLYG735R2", "553f555a65bcc73f82e29ffdc73e503b");
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
@@ -15,7 +16,7 @@ export default function Home({ products }) {
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">
       <InstantSearch searchClient={client} indexName="products">
-        <SearchBox />
+        <StyledSearchBox />
         <Hits hitComponent={Hit} />
         {/* <Products products={products} /> */}
         {/* </ul> */}
@@ -96,3 +97,34 @@ export async function getStaticProps() {
     },
   };
 }
+
+const StyledSearchBox = styled(SearchBox)`
+  .ais-SearchBox-form {
+    display: flex;
+    padding: 0 1rem;
+    background-color: white;
+  }
+
+  .ais-SearchBox-input {
+    flex-grow: 1;
+    padding: 10px 0;
+    outline: none;
+    background-color: transparent;
+  }
+
+  .ais-SearchBox-submit,
+  .ais-SearchBox-reset {
+    outline: none;
+  }
+
+  .ais-SearchBox-submit {
+    margin-right: 10px;
+  }
+
+  .ais-SearchBox-submitIcon,
+  .ais-SearchBox-resetIcon {
+    width: 1rem;
+    height: 1rem;
+    fill: gray;
+  }
+`;
