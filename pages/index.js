@@ -7,19 +7,32 @@ import { InstantSearch, SearchBox, Hits } from "react-instantsearch-dom";
 const algoliasearch = require("algoliasearch");
 import "instantsearch.css/themes/reset.css";
 import styled from "styled-components";
+import CustomRangeSlider from "./../components/algolia-widgets/RangeSlider";
+import { useState } from "react";
 
 const client = algoliasearch("MRLYG735R2", "553f555a65bcc73f82e29ffdc73e503b");
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
 export default function Home() {
+  const [type, setType] = useState("grid");
+
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">
       <InstantSearch searchClient={client} indexName="products">
         <Split>
-          <Side>left</Side>
+          <Side>
+            <CustomRangeSlider
+              min={100}
+              max={500000000}
+              canRefine={true}
+              attribute="price"
+              refine={() => {}}
+            />
+          </Side>
           <Main>
             <StyledSearchBox />
-            <Hits hitComponent={Hit} />
+            <Listing handleChange={(type) => setType(type)} />
+            <StyledHits hitComponent={Hit} grid={type === "grid"} />
           </Main>
         </Split>
       </InstantSearch>
@@ -50,11 +63,7 @@ const fetchProducts = gql`
       slug
       images(first: 1) {
         id
-        url(
-          transformation: {
-            image: { resize: { width: 500, height: 500, fit: crop } }
-          }
-        )
+        url(transformation: { image: { resize: { width: 500, height: 500, fit: crop } } })
         fileName
         height
         width
@@ -76,6 +85,7 @@ export async function getStaticProps() {
 const Main = styled.div``;
 
 const Side = styled.div`
+  width: 1500px;
   background-color: red;
   padding: 0 5rem;
 `;
@@ -115,3 +125,31 @@ const StyledSearchBox = styled(SearchBox)`
     fill: gray;
   }
 `;
+
+const StyledHits = styled(Hits)`
+  .ais-Hits {
+    margin-top: 0;
+  }
+
+  .ais-Hits-list {
+    grid-template-columns: ${(props) =>
+      props.grid ? "repeat(3, minmax(0, 1fr))" : "repeat(1, minmax(0, 1fr))"};
+  }
+`;
+
+const Listing = ({ handleChange }) => {
+  const Wrap = styled.div`
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+  `;
+
+  const onClick = () => {};
+
+  return (
+    <Wrap>
+      <button onClick={() => handleChange("list")}>LIST</button>
+      <button onClick={() => handleChange("grid")}>GRID</button>
+    </Wrap>
+  );
+};
