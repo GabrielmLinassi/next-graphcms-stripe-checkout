@@ -1,6 +1,13 @@
 module.exports = {
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
+      loader: "url-loader?limit=100000",
+    });
+    return config;
+  },
   images: {
-    domains: ["media.graphcms.com", "s.gravatar.com"],
+    domains: ["media.graphcms.com", "s.gravatar.com", "images-na.ssl-images-amazon.com"],
   },
   env: {
     APP_URL: process.env.APP_URL,

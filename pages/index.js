@@ -3,36 +3,48 @@ import Image from "next/image";
 import { gql, GraphQLClient } from "graphql-request";
 import Layout from "../components/Layout";
 import { formatPrice } from "../components/helper";
-import { InstantSearch, SearchBox, Hits } from "react-instantsearch-dom";
+import {
+  InstantSearch,
+  SearchBox,
+  Hits,
+  connectHits,
+  connectHitInsights,
+} from "react-instantsearch-dom";
 const algoliasearch = require("algoliasearch");
 import "instantsearch.css/themes/reset.css";
 import styled from "styled-components";
 import CustomRangeSlider from "./../components/algolia-widgets/RangeSlider";
+import CustomRatingMenu from "./../components/algolia-widgets/RatingMenu";
+import Listing from "components/Listing";
 import { useState } from "react";
+
+import Pagination from "components/algolia-widgets/Pagination";
+import RatingWidget from "components/RatingWidget";
+import Carousel from "components/carousel/Carousel";
 
 const client = algoliasearch("MRLYG735R2", "553f555a65bcc73f82e29ffdc73e503b");
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
 export default function Home() {
   const [type, setType] = useState("grid");
+  const HitWithType = (props) => <Hit {...props} type={type} />;
 
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">
       <InstantSearch searchClient={client} indexName="products">
         <Split>
           <Side>
-            <CustomRangeSlider
-              min={100}
-              max={500000000}
-              canRefine={true}
-              attribute="price"
-              refine={() => {}}
-            />
+            <h1 style={{ marginBottom: "2rem" }}>Filters</h1>
+            <CustomRatingMenu />
+            <div className="mt-5">
+              <CustomRangeSlider canRefine={true} attribute="price" />
+            </div>
           </Side>
           <Main>
             <StyledSearchBox />
             <Listing handleChange={(type) => setType(type)} />
-            <StyledHits hitComponent={Hit} grid={type === "grid"} />
+            <StyledHits hitComponent={HitWithType} grid={type === "grid"} />
+            <Pagination />
           </Main>
         </Split>
       </InstantSearch>
@@ -40,17 +52,64 @@ export default function Home() {
   );
 }
 
-const Hit = ({ hit: { objectID, name, price, slug, images } }) => {
+const Hit = ({ hit: { objectID, name, price, slug, images, stars, comments }, type }) => {
+  const Wrap = styled.div`
+    display: ${({ isList }) => (isList ? "flex" : "block")};
+    gap: ${({ isList }) => (isList ? "1rem" : "0")};
+
+    width: 100%;
+  `;
+
+  const ImageWrap = styled.div`
+    padding: 1rem;
+
+    ${type === "list" &&
+    ` width: 200px;
+      box-sizing: content-box;
+      border-right: solid 1px rgba(0, 0, 0, 0.1);
+    `}
+
+    ${type === "grid" &&
+    ` border-bottom: solid 1px rgba(0, 0, 0, 0.1); 
+      width: 100%;
+    `}
+  `;
+
+  const ContentWrap = styled.div`
+    ${type === "list" ? `padding: 1rem 1rem 1rem 0;` : `padding: 1rem;`}
+    width: 100%;
+  `;
+
   return (
-    <Link key={objectID} href={`/products/${slug}`}>
-      <a>
-        {images.length && <Image src={images[0]} width={500} height={500} />}
-        <div>
-          {name}
-          <div className="font-bold mt-3">{formatPrice(price)}</div>
+    // <Link key={objectID} href={`/products/${slug}`}>
+    <Wrap isList={type === "list"}>
+      <ImageWrap>
+        <Carousel images={images} />
+        {/* {images.length && (
+            <Image
+              src={images[0]}
+              width={4}
+              height={4}
+              layout="responsive"
+              objectFit="contain"
+              sizes={[1000]}
+            />
+          )} */}
+      </ImageWrap>
+      <ContentWrap>
+        <div className="text-sm clamp-line">{name}</div>
+        <div className="flex items-end gap-2">
+          <div>
+            <RatingWidget rate={stars} />
+          </div>
+          <a href="#" className="text-sm text-blue-500">
+            {comments}
+          </a>
         </div>
-      </a>
-    </Link>
+        <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
+      </ContentWrap>
+    </Wrap>
+    // </Link>
   );
 };
 
@@ -85,9 +144,9 @@ export async function getStaticProps() {
 const Main = styled.div``;
 
 const Side = styled.div`
-  width: 1500px;
-  background-color: red;
-  padding: 0 5rem;
+  flex: 0 0 300px;
+  background-color: rgba(0, 0, 0, 0.03);
+  padding: 3rem;
 `;
 
 const Split = styled.div`
@@ -127,29 +186,16 @@ const StyledSearchBox = styled(SearchBox)`
 `;
 
 const StyledHits = styled(Hits)`
-  .ais-Hits {
-    margin-top: 0;
-  }
+  margin-top: 0;
 
   .ais-Hits-list {
     grid-template-columns: ${(props) =>
       props.grid ? "repeat(3, minmax(0, 1fr))" : "repeat(1, minmax(0, 1fr))"};
+    gap: 0.5rem;
+  }
+
+  .ais-Hits-item {
+    padding: 0;
+    align-items: ${(props) => (props.grid ? "center" : "flex-start")};
   }
 `;
-
-const Listing = ({ handleChange }) => {
-  const Wrap = styled.div`
-    display: flex;
-    gap: 0.5rem;
-    justify-content: flex-end;
-  `;
-
-  const onClick = () => {};
-
-  return (
-    <Wrap>
-      <button onClick={() => handleChange("list")}>LIST</button>
-      <button onClick={() => handleChange("grid")}>GRID</button>
-    </Wrap>
-  );
-};

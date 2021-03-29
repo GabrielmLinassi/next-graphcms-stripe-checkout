@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { connectRange } from "react-instantsearch-dom";
+import { connectRange, RefinementList, Panel } from "react-instantsearch-dom";
+import styled from "styled-components";
 
 // Prerequisite: install rheostat@4
 import "rheostat/initialize";
@@ -33,22 +34,43 @@ function RangeSlider({ min, max, currentRefinement, canRefine, refine }) {
   };
 
   return (
-    <Rheostat
-      min={min}
-      max={max}
-      values={[currentRefinement.min, currentRefinement.max]}
-      onChange={onChange}
-      onValuesUpdated={onValuesUpdated}
-    >
-      <div className="rheostat-marker rheostat-marker--large" style={{ left: 0 }}>
-        <div className="rheostat-value">{stateMin}</div>
-      </div>
-      <div className="rheostat-marker rheostat-marker--large" style={{ right: 0 }}>
-        <div className="rheostat-value">{stateMax}</div>
-      </div>
-    </Rheostat>
+    <StyledPanel header="Price Range">
+      <Rheostat
+        min={min}
+        max={max}
+        values={[currentRefinement.min, currentRefinement.max]}
+        onChange={onChange}
+        onValuesUpdated={onValuesUpdated}
+      >
+        <div className="rheostat-marker rheostat-marker--large" style={{ left: 0 }}>
+          <div className="rheostat-value">
+            {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
+              stateMin
+            )}
+          </div>
+        </div>
+        <div className="rheostat-marker rheostat-marker--large" style={{ right: 0 }}>
+          <div className="rheostat-value">
+            {new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
+              stateMax
+            )}
+          </div>
+        </div>
+      </Rheostat>
+    </StyledPanel>
   );
 }
+
+const StyledPanel = styled(Panel)`
+  .ais-Panel-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: 1px solid #c4c8d8;
+  }
+`;
 
 const CustomRangeSlider = connectRange(RangeSlider);
 export default CustomRangeSlider;

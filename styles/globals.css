@@ -6,6 +6,13 @@
   h1 {
     @apply text-2xl font-bold;
   }
+
+  .clamp-line {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 html,

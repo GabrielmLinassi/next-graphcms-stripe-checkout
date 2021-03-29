@@ -1,9 +1,15 @@
+/**
+ * TODO: Separate Navbar into a component
+ */
+
 import { useAuth } from "contexts/auth";
 import Head from "next/head";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { CartIcon } from "./CartIcon";
 import Image from "next/image";
+import CartIcon2 from "components/icons/Cart";
+import Footer from "./layout/Footer";
 
 export default function Layout({ children, title }) {
   return (
@@ -13,10 +19,11 @@ export default function Layout({ children, title }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <header className="bg-yellow-200 text-black shadow-md py-5">
+      <header className="bg-yellow-200 text-black shadow-md py-10">
         <Navbar />
       </header>
-      <main className="max-w-4xl m-auto my-10">{children}</main>
+      <main className="max-w-6xl m-auto my-10">{children}</main>
+      <Footer />
     </>
   );
 }
@@ -26,7 +33,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="flex items-center justify-between max-w-4xl m-auto">
+    <nav className="flex items-center justify-between max-w-6xl m-auto">
       <div className="text-2xl font-bold">
         <Link href="/">
           <a>Sample Checkout</a>
@@ -34,6 +41,9 @@ const Navbar = () => {
       </div>
       <ul className="flex items-center">
         <li className="mr-5">
+          <CartIcon2 />
+        </li>
+        <li>
           {user ? (
             <div className="flex items-center">
               <div className="flex justify-center items-center p-5">
@@ -42,11 +52,7 @@ const Navbar = () => {
                     onClick={() => setOpen(!open)}
                     className="block h-12 w-12 rounded-full overflow-hidden focus:outline-none"
                   >
-                    <img
-                      className="h-full w-full object-cover"
-                      src={user.picture}
-                      alt="avatar"
-                    />
+                    <img className="h-full w-full object-cover" src={user.picture} alt="avatar" />
                   </button>
                   <div
                     className={`${
@@ -63,14 +69,11 @@ const Navbar = () => {
             </div>
           ) : (
             <Link href="/api/login">
-              <a className="border border-blue-500 px-4 py-2 rounded-md text-blue-500 hover:bg-blue-500 hover:text-white  mr-5">
+              <a className="border border-blue-500 px-4 py-2 rounded-md text-blue-500 hover:bg-blue-500 hover:text-white">
                 Login
               </a>
             </Link>
           )}
-        </li>
-        <li>
-          <CartIcon />
         </li>
       </ul>
     </nav>
