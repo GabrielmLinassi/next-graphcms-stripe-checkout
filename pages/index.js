@@ -1,26 +1,22 @@
-import Link from "next/link";
-import Image from "next/image";
-import { gql, GraphQLClient } from "graphql-request";
-import Layout from "../components/Layout";
-import { formatPrice } from "../components/helper";
-import {
-  InstantSearch,
-  SearchBox,
-  Hits,
-  connectHits,
-  connectHitInsights,
-} from "react-instantsearch-dom";
-const algoliasearch = require("algoliasearch");
-import "instantsearch.css/themes/reset.css";
-import styled from "styled-components";
-import CustomRangeSlider from "./../components/algolia-widgets/RangeSlider";
-import CustomRatingMenu from "./../components/algolia-widgets/RatingMenu";
-import Listing from "components/Listing";
 import { useState } from "react";
+import styled from "styled-components";
+import { gql, GraphQLClient } from "graphql-request";
+const algoliasearch = require("algoliasearch");
+import { InstantSearch, SearchBox, Hits } from "react-instantsearch-dom";
+import "instantsearch.css/themes/reset.css";
+import Link from "next/link";
 
+import { formatPrice } from "components/helper";
+import Layout from "components/Layout";
+import CustomRangeSlider from "components/algolia-widgets/RangeSlider";
+import CustomRatingMenu from "components/algolia-widgets/RatingMenu";
+import Listing from "components/Listing";
 import Pagination from "components/algolia-widgets/Pagination";
 import RatingWidget from "components/RatingWidget";
 import Carousel from "components/carousel/Carousel";
+import { respondTo } from "styles/_respondTo";
+import { clampBuilder } from "utils/clampBuilder";
+import { useShopify } from "contexts/shopify";
 
 const client = algoliasearch("MRLYG735R2", "553f555a65bcc73f82e29ffdc73e503b");
 const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
@@ -28,9 +24,11 @@ const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 export default function Home() {
   const [type, setType] = useState("grid");
   const HitWithType = (props) => <Hit {...props} type={type} />;
+  const { shopify } = useShopify();
 
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">
+      <ExampleComponent />
       <InstantSearch searchClient={client} indexName="products">
         <Split>
           <Side>
@@ -81,35 +79,25 @@ const Hit = ({ hit: { objectID, name, price, slug, images, stars, comments }, ty
   `;
 
   return (
-    // <Link key={objectID} href={`/products/${slug}`}>
-    <Wrap isList={type === "list"}>
-      <ImageWrap>
-        <Carousel images={images} />
-        {/* {images.length && (
-            <Image
-              src={images[0]}
-              width={4}
-              height={4}
-              layout="responsive"
-              objectFit="contain"
-              sizes={[1000]}
-            />
-          )} */}
-      </ImageWrap>
-      <ContentWrap>
-        <div className="text-sm clamp-line">{name}</div>
-        <div className="flex items-end gap-2">
-          <div>
-            <RatingWidget rate={stars} />
+    <Link key={objectID} href={`/products/${slug}`}>
+      <Wrap isList={type === "list"}>
+        <ImageWrap>
+          <Carousel images={images} />
+        </ImageWrap>
+        <ContentWrap>
+          <div className="text-sm clamp-line">{name}</div>
+          <div className="flex items-end gap-2">
+            <div>
+              <RatingWidget rate={stars} />
+            </div>
+            <a href="#" className="text-sm text-blue-500">
+              {comments}
+            </a>
           </div>
-          <a href="#" className="text-sm text-blue-500">
-            {comments}
-          </a>
-        </div>
-        <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
-      </ContentWrap>
-    </Wrap>
-    // </Link>
+          <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
+        </ContentWrap>
+      </Wrap>
+    </Link>
   );
 };
 
@@ -199,3 +187,22 @@ const StyledHits = styled(Hits)`
     align-items: ${(props) => (props.grid ? "center" : "flex-start")};
   }
 `;
+
+// Background color changes to
+// red from breakpoint sm (600px)
+export const ExampleComponent = () => {
+  const StyledExampleComponent = styled.div`
+    background-color: blue;
+    margin: ${clampBuilder(1.5, 3.5)};
+
+    ${respondTo.forTabletPortraitUp`
+      background-color: red;
+    `}
+
+    ${respondTo.forDesktopUp`
+      background-color: green;
+    `}
+  `;
+
+  return <StyledExampleComponent>Test</StyledExampleComponent>;
+};
