@@ -3,10 +3,12 @@ const client = algoliasearch("MRLYG735R2", "553f555a65bcc73f82e29ffdc73e503b");
 const index = client.initIndex("products-shopify");
 
 export default async function AddtoAlgolia(req, res) {
-  try {
-    const { id, title, body_html, handle, status, variants, images } = req.body;
-    const { price, inventory_quantity } = variants[0];
+  console.log({ product: JSON.stringify(req.body) });
 
+  try {
+    // const { id, title, body_html, handle, status, variants, images } = req.body;
+    // const { price, inventory_quantity } = variants[0];
+    /**
     const product = {
       objectID: id,
       title,
@@ -21,7 +23,7 @@ export default async function AddtoAlgolia(req, res) {
       })),
     };
 
-    await index.saveObject(product);
+    await index.saveObject(product); */
     res.send(201);
   } catch (err) {
     console.log(err);
