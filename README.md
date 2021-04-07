@@ -4,6 +4,8 @@ E-commerce Application built with Next.JS as the React Framework, GraphCMS as th
 
 Live: https://next-graphcms-stripe-checkout.vercel.app/
 
+![screencapture-localhost-3000-2021-04-07-00_17_12](https://user-images.githubusercontent.com/17390090/113805419-e15e1680-9736-11eb-8758-8a19fe0815fb.png)
+
 ## Test Stripe webhook locally
 
 1. Disable live stripe webhook
