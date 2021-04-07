@@ -1,22 +1,10 @@
-import { RatingMenu, Panel } from "react-instantsearch-dom";
+import { RatingMenu as AlgoliaRatingMenu, Panel } from "react-instantsearch-dom";
 import styled from "styled-components";
 
-const CustomRatingMenu = () => {
-  return (
-    <>
-      <StyledPanel header="Ratings">
-        <StyledRatingMenu
-          attribute="rating"
-          translations={{
-            ratingLabel: "& Up",
-          }}
-        />
-      </StyledPanel>
-    </>
-  );
-};
+/* --- --- --- */
 
-const StyledPanel = styled(Panel)`
+const S = {};
+S.Panel = styled(Panel)`
   .ais-Panel-header {
     margin-bottom: 0.5rem;
     padding-bottom: 0.5rem;
@@ -27,7 +15,7 @@ const StyledPanel = styled(Panel)`
   }
 `;
 
-const StyledRatingMenu = styled(RatingMenu)`
+S.RatingMenu = styled(AlgoliaRatingMenu)`
   .ais-RatingMenu-starIcon {
     width: 15px;
     fill: #ffc168;
@@ -56,4 +44,19 @@ const StyledRatingMenu = styled(RatingMenu)`
   }
 `;
 
-export default CustomRatingMenu;
+/* --- --- --- */
+
+export const RatingMenu = () => {
+  return (
+    <>
+      <S.Panel header="Ratings">
+        <S.RatingMenu
+          attribute="rating"
+          translations={{
+            ratingLabel: "& Up",
+          }}
+        />
+      </S.Panel>
+    </>
+  );
+};

@@ -1,7 +1,5 @@
 import styled from "styled-components";
-
-import ArrowLeft from "components/icons/ArrowLeft";
-import ArrowRight from "components/icons/ArrowRight";
+import { ArrowLeft, ArrowRight } from "components/icons/index";
 
 export const StyledArrowButton = styled.button`
   position: absolute;

@@ -1,14 +1,8 @@
-/**
- * TODO: Separate Navbar into a component
- */
-
 import { useAuth } from "contexts/auth";
 import Head from "next/head";
 import Link from "next/link";
-import React, { useContext, useEffect, useState } from "react";
-import { CartIcon } from "./CartIcon";
-import Image from "next/image";
-import CartIcon2 from "components/icons/Cart";
+import React, { useState } from "react";
+import { Cart as CartIcon2 } from "components/icons/index";
 import Footer from "./layout/Footer";
 
 export default function Layout({ children, title }) {

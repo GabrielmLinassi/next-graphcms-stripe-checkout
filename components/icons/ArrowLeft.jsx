@@ -1,4 +1,4 @@
-const ArrowLeft = () => {
+export const ArrowLeft = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,5 +15,3 @@ const ArrowLeft = () => {
     </svg>
   );
 };
-
-export default ArrowLeft;

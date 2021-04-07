@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { connectRange, RefinementList, Panel } from "react-instantsearch-dom";
+import { connectRange, Panel } from "react-instantsearch-dom";
 import styled from "styled-components";
 
 // Prerequisite: install rheostat@4
@@ -7,7 +7,7 @@ import "rheostat/initialize";
 import Rheostat from "rheostat";
 import "rheostat/css/rheostat.css";
 
-function RangeSlider({ min, max, currentRefinement, canRefine, refine }) {
+export const RangeSlider = connectRange(({ min, max, currentRefinement, canRefine, refine }) => {
   const [stateMin, setStateMin] = useState(min);
   const [stateMax, setStateMax] = useState(max);
 
@@ -59,7 +59,7 @@ function RangeSlider({ min, max, currentRefinement, canRefine, refine }) {
       </Rheostat>
     </StyledPanel>
   );
-}
+});
 
 const StyledPanel = styled(Panel)`
   .ais-Panel-header {
@@ -71,6 +71,3 @@ const StyledPanel = styled(Panel)`
     border-bottom: 1px solid #c4c8d8;
   }
 `;
-
-const CustomRangeSlider = connectRange(RangeSlider);
-export default CustomRangeSlider;

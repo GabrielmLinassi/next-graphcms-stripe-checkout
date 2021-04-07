@@ -1,4 +1,4 @@
-export default function Grid(props) {
+export function Grid(props) {
   return (
     <svg
       class="ui-search-gallery-desktop"

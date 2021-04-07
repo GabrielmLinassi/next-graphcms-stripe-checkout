@@ -1,7 +1,7 @@
 import image from "./cart.png";
 import styled from "styled-components";
 
-export default function Cart() {
+export function Cart() {
   const color = "#333";
 
   // Amazon Icon style

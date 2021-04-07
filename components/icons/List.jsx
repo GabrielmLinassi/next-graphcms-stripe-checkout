@@ -1,4 +1,4 @@
-export default function List(props) {
+export function List(props) {
   return (
     <svg
       class="ui-search-list-desktop"

@@ -1,20 +1,10 @@
 import { Pagination as AlgoliaPagination } from "react-instantsearch-dom";
 import styled from "styled-components";
 
-const Pagination = () => {
-  return (
-    <StyledPagination
-      showNext
-      showFirst={false}
-      translations={{
-        previous: "< Previous",
-        next: "Next >",
-      }}
-    />
-  );
-};
+/* --- --- --- */
 
-const StyledPagination = styled(AlgoliaPagination)`
+const S = {};
+S.Pagination = styled(AlgoliaPagination)`
   margin-top: 2em;
 
   .ais-Pagination-list {
@@ -53,4 +43,17 @@ const StyledPagination = styled(AlgoliaPagination)`
   }
 `;
 
-export default Pagination;
+/* --- --- --- */
+
+export const Pagination = () => {
+  return (
+    <S.Pagination
+      showNext
+      showFirst={false}
+      translations={{
+        previous: "< Previous",
+        next: "Next >",
+      }}
+    />
+  );
+};
