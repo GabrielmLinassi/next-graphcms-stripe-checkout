@@ -3,15 +3,7 @@ import styled from "styled-components";
 
 import Layout from "components/Layout";
 import { DisplayListTypes } from "components/DisplayListTypes";
-import {
-  RangeSlider,
-  RatingMenu,
-  Pagination,
-  Hit,
-  Hits,
-  Searchbox,
-  Stats,
-} from "components/algolia";
+import { RangeSlider, RatingMenu, Pagination, Hits, Searchbox, Stats } from "components/algolia";
 
 /* --- --- --- */
 
@@ -58,7 +50,7 @@ export default function Home() {
             <Stats />
             <DisplayListTypes handleChange={(type) => setType(type)} />
           </S.Wrap>
-          <Hits hitComponent={(props) => <Hit {...props} type={type} />} grid={type === "grid"} />
+          <Hits type={type} />
           <Pagination />
         </S.Main>
       </S.Split>

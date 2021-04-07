@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { Hits as AlgoliaHits } from "react-instantsearch-dom";
+import { Hit } from "./Hit";
 
 const S = {};
 S.Hits = styled(AlgoliaHits)`
@@ -17,4 +18,6 @@ S.Hits = styled(AlgoliaHits)`
   }
 `;
 
-export const Hits = (props) => <S.Hits {...props} />;
+export const Hits = ({ type }) => {
+  return <S.Hits hitComponent={(props) => <Hit {...props} type={type} />} grid={type === "grid"} />;
+};
