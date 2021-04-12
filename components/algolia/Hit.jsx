@@ -56,3 +56,16 @@ export const Hit = ({ hit: { objectID, name, price, slug, images, stars, comment
     </Link>
   );
 };
+
+export async function getStaticProps() {
+  const res = await fetch("/api/shopify/products");
+  const products = await res.json();
+
+  console.log("getStaticProps", products);
+
+  return {
+    props: {
+      products,
+    },
+  };
+}

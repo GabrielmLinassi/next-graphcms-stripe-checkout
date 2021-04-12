@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Hits as AlgoliaHits } from "react-instantsearch-dom";
+import { Hits as AlgoliaHits, RefinementList } from "react-instantsearch-dom";
 import { Hit } from "./Hit";
 
 const S = {};

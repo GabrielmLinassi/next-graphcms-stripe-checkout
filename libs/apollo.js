@@ -1,4 +1,4 @@
-import { ApolloClient, InMemoryCache, HttpLink, ApolloLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink, ApolloLink, createHttpLink } from "@apollo/client";
 import { onError } from "apollo-link-error";
 
 const link = onError(({ graphQLErrors, networkError }) => {
@@ -9,7 +9,20 @@ const link = onError(({ graphQLErrors, networkError }) => {
   if (networkError) console.log(`[Network error]: ${networkError}`);
 });
 
-const apolloClient = new ApolloClient({
+const apolloClientShopify = new ApolloClient({
+  cache: new InMemoryCache(),
+  connectToDevTools: true,
+  link: new createHttpLink({
+    uri: "https://gabriels-sample-store.myshopify.com/api/2021-04/graphql.json",
+    headers: {
+      "Content-Type": "application/graphql",
+      Accept: "application/graphql",
+      "X-Shopify-Storefront-Access-Token": "c8089fd576b144da06bd40ecba4c4aa3",
+    },
+  }),
+});
+
+const apolloClientGraphCMS = new ApolloClient({
   cache: new InMemoryCache(),
   connectToDevTools: true,
   link: ApolloLink.from([
@@ -20,4 +33,4 @@ const apolloClient = new ApolloClient({
   ]),
 });
 
-export default apolloClient;
+export default apolloClientShopify;

@@ -40,7 +40,7 @@
     "slick-carousel": "^1.8.1",
     "stripe": "^8.132.0",
     "styled-components": "^5.2.1",
-    "tailwindcss": "^2.0.2",
+    "tailwindcss": "^2.1.1",
     "text-overflow-clamp": "^1.0.0",
     "tslib": "^2.1.0",
     "twin.macro": "^2.3.2",

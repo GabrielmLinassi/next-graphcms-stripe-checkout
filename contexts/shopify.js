@@ -11,11 +11,6 @@ const productsFound = (data) => ({
   payload: data,
 });
 
-export const productFound = (data) => ({
-  type: "PRODUCT_FOUND",
-  payload: data,
-});
-
 // Reducer
 export const shopifyReducer = (state, action) => {
   switch (action.type) {
@@ -51,9 +46,7 @@ function ShopifyProvider({ children }) {
   }, []);
 
   return (
-    <ShopifyContext.Provider
-      value={{ shopify, dispatch, fetchProduct, fetchProducts }}
-    >
+    <ShopifyContext.Provider value={{ shopify, dispatch, fetchProduct, fetchProducts }}>
       {children}
     </ShopifyContext.Provider>
   );
