@@ -1,104 +1,75 @@
-import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import { gql, GraphQLClient } from "graphql-request";
+import Layout from "../../components/Layout";
+import { formatPrice } from "../../components/helper";
+import { useContext, useEffect, useState } from "react";
+import { PayButton } from "components/PayBtn";
+
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
-import { initializeApollo } from "libs/apollo";
-import { gql } from "@apollo/client";
 
-import { formatPrice } from "../../components/helper";
-import { PayButton } from "components/PayBtn";
-import Layout from "../../components/Layout";
 import BackBtn from "components/BackBtn";
 
+/* context */
 import { CartContext } from "contexts/CartProvider";
 import { addToCart } from "reducers/CartReducer";
 
-/* --- --- --- */
-
-const AllProducts = gql`
-  query AllProducts {
-    products(first: 250) {
-      edges {
-        node {
-          handle
-        }
-      }
-    }
-  }
-`;
-
-const ProductByHandle = gql`
-  query ProductByHandle($handle: String!) {
-    productByHandle(handle: $handle) {
-      id
-      handle
-      title
-      description
-      variants(first: 20) {
-        edges {
-          node {
-            id
-            price
-          }
-        }
-      }
-      images(first: 20) {
-        edges {
-          node {
-            originalSrc
-          }
-        }
-      }
-    }
-  }
-`;
+const graphcms = new GraphQLClient(process.env.GRAPHCMS_API);
 
 export async function getStaticPaths() {
-  const apolloClient = initializeApollo();
-
-  const { data } = await apolloClient.query({
-    query: AllProducts,
-  });
-
-  const slugs = data.products.edges.map((edge) => ({ params: { slug: edge.node.handle } }));
+  const { products } = await graphcms.request(
+    gql`
+      {
+        products {
+          name
+          slug
+        }
+      }
+    `
+  );
 
   return {
-    paths: slugs,
+    paths: products.map(({ slug }) => ({
+      params: {
+        slug,
+      },
+    })),
     fallback: false,
   };
 }
 
 export async function getStaticProps({ params }) {
-  const apolloClient = initializeApollo();
-
-  const { data } = await apolloClient.query({
-    query: ProductByHandle,
-    variables: {
-      handle: params.slug,
-    },
-  });
+  const { product } = await graphcms.request(
+    gql`
+      query ProductPageQuery($slug: String!) {
+        product(where: { slug: $slug }) {
+          name
+          slug
+          price
+          description
+          images {
+            id
+            url
+            fileName
+            height
+            width
+          }
+        }
+      }
+    `,
+    { slug: params.slug }
+  );
 
   return {
     props: {
-      product: data.productByHandle,
+      product,
     },
   };
 }
 
 const ProductPage = ({ product }) => {
-  const { handle: slug, title: name, description, images, variants } = product;
-
-  const { price } = variants.edges[0].node;
-
-  const allImages = images.edges.map((edge) => ({
-    id: edge.node.id,
-    src: edge.node.originalSrc,
-    fileName: edge.node.altText,
-  }));
-
-  /* --- --- --- */
-
+  const { slug, name, price, description, images } = product;
   const [quantity, setQuantity] = useState(1);
 
   return (
@@ -107,7 +78,7 @@ const ProductPage = ({ product }) => {
       <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3">
         <div className="flex">
           <div className="w-8/12">
-            <Images images={allImages} />
+            <Images images={images} />
           </div>
           <div className="border-l pl-5">
             <div className="text-left">{name}</div>
@@ -180,14 +151,22 @@ const Images = ({ images }) => {
 
   return (
     <div className="flex w-full">
-      <Slider {...settingsThumbs} asNavFor={nav1} ref={(slider) => setSlider2(slider)}>
-        {images.map(({ id, src, fileName }) => (
-          <Image key={id} src={src} width={50} height={50} alt={fileName} />
+      <Slider
+        {...settingsThumbs}
+        asNavFor={nav1}
+        ref={(slider) => setSlider2(slider)}
+      >
+        {images.map(({ id, url, fileName }) => (
+          <Image key={id} src={url} width={50} height={50} alt={fileName} />
         ))}
       </Slider>
-      <Slider {...settingsMain} asNavFor={nav2} ref={(slider) => setSlider1(slider)}>
-        {images.map(({ id, src, fileName }) => (
-          <Image key={id} src={src} width={300} height={300} alt={fileName} />
+      <Slider
+        {...settingsMain}
+        asNavFor={nav2}
+        ref={(slider) => setSlider1(slider)}
+      >
+        {images.map(({ id, url, fileName }) => (
+          <Image key={id} src={url} width={300} height={300} alt={fileName} />
         ))}
       </Slider>
     </div>

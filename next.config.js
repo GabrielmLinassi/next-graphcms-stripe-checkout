@@ -7,7 +7,12 @@ module.exports = {
     return config;
   },
   images: {
-    domains: ["media.graphcms.com", "s.gravatar.com", "images-na.ssl-images-amazon.com"],
+    domains: [
+      "media.graphcms.com",
+      "s.gravatar.com",
+      "images-na.ssl-images-amazon.com",
+      "cdn.shopify.com",
+    ],
   },
   env: {
     APP_URL: process.env.APP_URL,
