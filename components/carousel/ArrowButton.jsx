@@ -9,10 +9,10 @@ export const StyledArrowButton = styled.button`
 
   ${({ type }) =>
     type === "prev"
-      ? `left: 0;
+      ? `left: 10px;
          right: auto;`
       : `left: auto;
-         right: 0;`}
+         right: 10px;`}
 
   visibility: ${({ isVisible }) => (isVisible ? "visible" : "hidden")};
   opacity: 0;

@@ -1,58 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import Image from "next/image";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
+import { useContext, useState } from "react";
 import { initializeApollo } from "libs/apollo";
-import { gql } from "@apollo/client";
 
-import { formatPrice } from "../../components/helper";
+import { formatPrice } from "components/helper";
 import { PayButton } from "components/PayBtn";
-import Layout from "../../components/Layout";
+import Layout from "components/Layout";
 import BackBtn from "components/BackBtn";
+import Carousel from "components/carousel/Carousel";
 
 import { CartContext } from "contexts/CartProvider";
 import { addToCart } from "reducers/CartReducer";
+import { AllProducts, ProductByHandle } from "queries/product";
 
 /* --- --- --- */
-
-const AllProducts = gql`
-  query AllProducts {
-    products(first: 250) {
-      edges {
-        node {
-          handle
-        }
-      }
-    }
-  }
-`;
-
-const ProductByHandle = gql`
-  query ProductByHandle($handle: String!) {
-    productByHandle(handle: $handle) {
-      id
-      handle
-      title
-      description
-      variants(first: 20) {
-        edges {
-          node {
-            id
-            price
-          }
-        }
-      }
-      images(first: 20) {
-        edges {
-          node {
-            originalSrc
-          }
-        }
-      }
-    }
-  }
-`;
 
 export async function getStaticPaths() {
   const apolloClient = initializeApollo();
@@ -104,12 +63,12 @@ const ProductPage = ({ product }) => {
   return (
     <Layout>
       <BackBtn />
-      <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3">
-        <div className="flex">
-          <div className="w-8/12">
-            <Images images={allImages} />
+      <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3 w-full h-full">
+        <div className="flex w-full h-full">
+          <div className="w-full h-full">
+            <Carousel images={allImages.map((image) => image.src)} withThumbs={true} />
           </div>
-          <div className="border-l pl-5">
+          <div className="border-l ml-5 pl-5" style={{ width: "100%", height: "100%" }}>
             <div className="text-left">{name}</div>
             <div className="font-bold text-left mt-3">{formatPrice(price)}</div>
             <div className="text-left mt-5">
@@ -145,52 +104,6 @@ const AddCart = ({ slug, quantity }) => {
     >
       Add Cart
     </button>
-  );
-};
-
-const Images = ({ images }) => {
-  const [nav1, setNav1] = useState(null);
-  const [nav2, setNav2] = useState(null);
-  const [slider1, setSlider1] = useState(null);
-  const [slider2, setSlider2] = useState(null);
-
-  useEffect(() => {
-    setNav1(slider1);
-    setNav2(slider2);
-  });
-
-  var settingsMain = {
-    slidesToShow: 1,
-    arrows: false,
-    fade: true,
-    asNavFor: ".slider-nav",
-  };
-
-  const settingsThumbs = {
-    slidesToShow: 4,
-    asNavFor: ".slider-for",
-    dots: false,
-    arrows: false,
-    centerMode: false,
-    swipeToSlide: true,
-    focusOnSelect: true,
-    vertical: true,
-    verticalSwiping: true,
-  };
-
-  return (
-    <div className="flex w-full">
-      <Slider {...settingsThumbs} asNavFor={nav1} ref={(slider) => setSlider2(slider)}>
-        {images.map(({ id, src, fileName }) => (
-          <Image key={id} src={src} width={50} height={50} alt={fileName} />
-        ))}
-      </Slider>
-      <Slider {...settingsMain} asNavFor={nav2} ref={(slider) => setSlider1(slider)}>
-        {images.map(({ id, src, fileName }) => (
-          <Image key={id} src={src} width={300} height={300} alt={fileName} />
-        ))}
-      </Slider>
-    </div>
   );
 };
 
