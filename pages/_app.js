@@ -13,6 +13,7 @@ import { theme } from "styles/theme";
 import { algoliaClient, indexName } from "libs/algolia";
 import { ErrorFallBack } from "components/ErrorFallback";
 import { useApollo } from "libs/apollo";
+import GlobalStyles from "components/GlobalStyles";
 
 /* --- --- --- */
 
@@ -26,6 +27,7 @@ function MyApp({ Component, pageProps }) {
           <AuthProvider>
             <CartProvider>
               <ThemeProvider theme={theme}>
+                <GlobalStyles />
                 <Component {...pageProps} />
               </ThemeProvider>
             </CartProvider>

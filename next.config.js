@@ -1,9 +1,16 @@
 module.exports = {
-  webpack: (config, options) => {
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Unset client-side javascript that only works server-side
+      // https://github.com/vercel/next.js/issues/7755#issuecomment-508633125
+      config.node = { fs: "empty", module: "empty" };
+    }
+
     config.module.rules.push({
       test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
       loader: "url-loader?limit=100000",
     });
+
     return config;
   },
   images: {
