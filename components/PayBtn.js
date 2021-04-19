@@ -28,8 +28,6 @@ const PayButton = ({ products, full = false }) => {
       }),
     }).then((res) => res.json());
 
-    dispatch(clearCart());
-
     await stripe.redirectToCheckout({
       sessionId: session.id,
     });

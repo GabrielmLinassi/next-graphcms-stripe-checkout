@@ -126,3 +126,22 @@ export const UPDATE_ITEM_CART = gql`
     }
   }
 `;
+
+export const PRODUCTS_BY_ID = gql`
+  query ProductsById($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on Product {
+        title
+        variants(first: 1) {
+          edges {
+            node {
+              priceV2 {
+                amount
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
