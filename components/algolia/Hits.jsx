@@ -1,6 +1,8 @@
 import styled from "styled-components";
-import { Hits as AlgoliaHits, RefinementList } from "react-instantsearch-dom";
+import { Hits as AlgoliaHits, connectStateResults } from "react-instantsearch-dom";
 import { Hit } from "./Hit";
+import Skeleton from "react-loading-skeleton";
+import tw from "twin.macro";
 
 const S = {};
 S.Hits = styled(AlgoliaHits)`
@@ -18,6 +20,35 @@ S.Hits = styled(AlgoliaHits)`
   }
 `;
 
+const Results = connectStateResults(({ searchState, searchResults, children }) =>
+  searchResults && searchResults.nbHits !== 0 ? (
+    children
+  ) : (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+        gap: "0.5rem",
+      }}
+    >
+      {[1, 2, 3, 4, 5, 6].map(() => (
+        <div tw="flex flex-col items-center gap-5 bg-white rounded-md shadow-md p-1">
+          <div style={{ width: "100%" }}>
+            <Skeleton height={250} tw="" />
+            <Skeleton height={100} />
+          </div>
+          {/* <Skeleton height={15} width={150} />
+          <Skeleton height={25} width={50} style={{ display: "block" }} /> */}
+        </div>
+      ))}
+    </div>
+  )
+);
+
 export const Hits = ({ type }) => {
-  return <S.Hits hitComponent={(props) => <Hit {...props} type={type} />} grid={type === "grid"} />;
+  return (
+    <Results>
+      <S.Hits hitComponent={(props) => <Hit {...props} type={type} />} grid={type === "grid"} />
+    </Results>
+  );
 };

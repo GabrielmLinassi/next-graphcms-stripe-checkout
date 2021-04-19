@@ -1,5 +1,10 @@
-import { RatingMenu as AlgoliaRatingMenu, Panel } from "react-instantsearch-dom";
+import {
+  RatingMenu as AlgoliaRatingMenu,
+  Panel,
+  connectStateResults,
+} from "react-instantsearch-dom";
 import styled from "styled-components";
+import Skeleton from "react-loading-skeleton";
 
 /* --- --- --- */
 
@@ -46,9 +51,13 @@ S.RatingMenu = styled(AlgoliaRatingMenu)`
 
 /* --- --- --- */
 
+const Results = connectStateResults(({ searchState, searchResults, children }) =>
+  searchResults && searchResults.nbHits !== 0 ? children : <Skeleton count={5} />
+);
+
 export const RatingMenu = () => {
   return (
-    <>
+    <Results>
       <S.Panel header="Ratings">
         <S.RatingMenu
           attribute="rating"
@@ -57,6 +66,6 @@ export const RatingMenu = () => {
           }}
         />
       </S.Panel>
-    </>
+    </Results>
   );
 };

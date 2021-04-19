@@ -8,7 +8,9 @@ import { RangeSlider, RatingMenu, Pagination, Hits, Searchbox, Stats } from "com
 /* --- --- --- */
 
 const S = {};
-S.Main = styled.div``;
+S.Main = styled.div`
+  width: 100%;
+`;
 
 S.Side = styled.div`
   flex: 0 0 300px;
@@ -45,7 +47,7 @@ export default function Home() {
           </div>
         </S.Side>
         <S.Main>
-          <Searchbox />
+          <Searchbox showLoadingIndicator />
           <S.Wrap>
             <Stats />
             <DisplayListTypes handleChange={(type) => setType(type)} />

@@ -3,6 +3,8 @@ import RatingWidget from "components/RatingWidget";
 import Carousel from "components/carousel/Carousel";
 import Link from "next/link";
 import { formatPrice } from "components/helper";
+import Skeleton from "react-loading-skeleton";
+import { connectStateResults } from "react-instantsearch-dom";
 
 const Wrap = styled.div`
   display: ${({ isList }) => (isList ? "flex" : "block")};
@@ -33,27 +35,33 @@ const ContentWrap = styled.div`
   width: 100%;
 `;
 
+const Results = connectStateResults(({ searchState, searchResults, children }) =>
+  searchResults && searchResults.nbHits !== 0 ? children : <div>loading...</div>
+);
+
 export const Hit = ({ hit: { objectID, name, price, slug, images, stars, comments }, type }) => {
   return (
-    <Link key={objectID} href={`/products/${slug}`}>
-      <Wrap isList={type === "list"}>
-        <ImageWrap type={type}>
-          <Carousel images={images} />
-        </ImageWrap>
-        <ContentWrap type={type}>
-          <div className="text-sm clamp-line">{name}</div>
-          <div className="flex items-end gap-2">
-            <div>
-              <RatingWidget rate={stars} />
+    <Results>
+      <Link key={objectID} href={`/products/${slug}`}>
+        <Wrap isList={type === "list"}>
+          <ImageWrap type={type}>
+            <Carousel images={images} />
+          </ImageWrap>
+          <ContentWrap type={type}>
+            <div className="text-sm clamp-line">{name}</div>
+            <div className="flex items-end gap-2">
+              <div>
+                <RatingWidget rate={stars} />
+              </div>
+              <a href="#" className="text-sm text-blue-500">
+                {comments}
+              </a>
             </div>
-            <a href="#" className="text-sm text-blue-500">
-              {comments}
-            </a>
-          </div>
-          <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
-        </ContentWrap>
-      </Wrap>
-    </Link>
+            <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
+          </ContentWrap>
+        </Wrap>
+      </Link>
+    </Results>
   );
 };
 
