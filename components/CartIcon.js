@@ -4,17 +4,17 @@ import { useContext } from "react";
 import { CartContext } from "contexts/CartProvider";
 
 const CartIcon = () => {
-  const { cart } = useContext(CartContext);
+  // const { cart } = useContext(CartContext);
 
   return (
     <Link href="/cart">
       <a>
         <div className="relative p-3">
-          {cart?.length && (
+          {/* {cart?.length && (
             <span className="absolute -left-3 top-1 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-white">
               {cart.length}
             </span>
-          )}
+          )} */}
           <Icon />
         </div>
       </a>

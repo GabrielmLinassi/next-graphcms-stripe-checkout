@@ -2,7 +2,8 @@ import { useAuth } from "contexts/auth";
 import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
-import { Cart as CartIcon2 } from "components/icons/index";
+// import { Cart as CartIcon2 } from "components/icons/index";
+import { CartIcon } from "components/CartIcon";
 import Footer from "./layout/Footer";
 
 export default function Layout({ children, title }) {
@@ -35,7 +36,7 @@ const Navbar = () => {
       </div>
       <ul className="flex items-center">
         <li className="mr-5">
-          <CartIcon2 />
+          <CartIcon />
         </li>
         <li>
           {user ? (

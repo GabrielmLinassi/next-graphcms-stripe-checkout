@@ -1,6 +1,5 @@
-import { useContext, useState } from "react";
-
-import { initializeApollo } from "libs/apollo";
+import { useContext, useEffect, useState } from "react";
+import { useQuery, useMutation } from "@apollo/client";
 
 import { formatPrice } from "components/helper";
 import { PayButton } from "components/PayBtn";
@@ -8,9 +7,12 @@ import Layout from "components/Layout";
 import BackBtn from "components/BackBtn";
 import Carousel from "components/carousel/Carousel";
 
+import { initializeApollo } from "libs/apollo";
 import { CartContext } from "contexts/CartProvider";
 import { addToCart } from "reducers/CartReducer";
 import { AllProducts, ProductByHandle } from "queries/product";
+import { ADD_ITEM_CART, CREATE_CART } from "queries/queries";
+import { useCookies } from "react-cookie";
 
 /* --- --- --- */
 
@@ -49,7 +51,7 @@ export async function getStaticProps({ params }) {
 const ProductPage = ({ product }) => {
   const { handle: slug, title: name, description, images, variants } = product;
 
-  const { price } = variants.edges[0].node;
+  const { id: variantId, price } = variants.edges[0].node;
 
   const allImages = images.edges.map((edge) => ({
     id: edge.node.id,
@@ -78,7 +80,7 @@ const ProductPage = ({ product }) => {
             <div className="mt-5">
               <PayButton products={[{ slug: slug, quantity: quantity }]} full />
             </div>
-            <AddCart slug={slug} quantity={quantity} />
+            <AddCart variantId={variantId} quantity={quantity} />
           </div>
         </div>
         <div className="mt-16 text-lg">{description}</div>
@@ -87,15 +89,50 @@ const ProductPage = ({ product }) => {
   );
 };
 
-const AddCart = ({ slug, quantity }) => {
-  const { dispatch } = useContext(CartContext);
+const AddCart = ({ variantId, quantity }) => {
+  const [createCart, { data }] = useMutation(CREATE_CART);
+  const [addItemCart] = useMutation(ADD_ITEM_CART);
+  const [cookies, setCookie] = useCookies(["cart"]);
 
-  const addToCartHandler = (product) => {
-    dispatch(addToCart(product));
+  const addToCartHandler = (variantId, quantity) => {
+    // If there's not a cart for the session, create a new one
+    // else, just add item to the cart
+    if (JSON.stringify(cookies) === "{}") {
+      createCart({
+        variables: {
+          input: {
+            lineItems: [
+              {
+                variantId,
+                quantity,
+              },
+            ],
+          },
+        },
+      });
+    } else {
+      addItemCart({
+        variables: {
+          lineItems: [
+            {
+              variantId,
+              quantity,
+            },
+          ],
+          checkoutId: cookies.cart,
+        },
+      });
+    }
   };
 
+  useEffect(() => {
+    if (data?.checkoutCreate) {
+      setCookie("cart", data.checkoutCreate.checkout.id, { path: "/" });
+    }
+  }, [data]);
+
   const handleClick = () => {
-    addToCartHandler({ slug, quantity });
+    addToCartHandler(variantId, quantity);
   };
 
   return (
