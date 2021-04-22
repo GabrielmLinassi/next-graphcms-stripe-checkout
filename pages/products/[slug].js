@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { initializeApollo } from "libs/apollo";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 import { formatPrice } from "components/helper";
 import { PayButton } from "components/PayBtn";
@@ -9,6 +11,7 @@ import Carousel from "components/carousel/Carousel";
 import AddCart from "components/AddCartButton";
 import Amount from "components/AmountButton";
 import { AllProducts, ProductByHandle } from "queries/product";
+import { useAddCart } from "components/AddCartButton";
 
 /* --- --- --- */
 
@@ -46,8 +49,10 @@ export async function getStaticProps({ params }) {
 
 const ProductPage = ({ product }) => {
   const { id, handle: slug, title: name, description, images, variants } = product;
-
   const { id: variantId, price } = variants.edges[0].node;
+
+  const router = useRouter();
+  const { addToCartHandler } = useAddCart();
 
   const allImages = images.edges.map((edge) => ({
     id: edge.node.id,
@@ -74,6 +79,14 @@ const ProductPage = ({ product }) => {
               <Amount quantity={quantity} setQuantity={setQuantity} />
             </div>
             <div className="mt-5">
+              <button
+                onClick={() => {
+                  addToCartHandler(variantId, quantity);
+                  router.push("/checkout");
+                }}
+              >
+                Go to Checkout
+              </button>
               <PayButton products={[{ id, quantity }]} full />
             </div>
             <AddCart variantId={variantId} quantity={quantity} />

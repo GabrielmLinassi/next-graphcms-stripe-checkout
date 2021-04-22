@@ -43,23 +43,25 @@ export const Hit = ({ hit: { objectID, name, price, slug, images, stars, comment
   return (
     <Results>
       <Link key={objectID} href={`/products/${slug}`}>
-        <Wrap isList={type === "list"}>
-          <ImageWrap type={type}>
-            <Carousel images={images} />
-          </ImageWrap>
-          <ContentWrap type={type}>
-            <div className="text-sm clamp-line">{name}</div>
-            <div className="flex items-end gap-2">
-              <div>
-                <RatingWidget rate={stars} />
+        <a target="_blank" rel="noreferrer">
+          <Wrap isList={type === "list"}>
+            <ImageWrap type={type}>
+              <Carousel images={images} />
+            </ImageWrap>
+            <ContentWrap type={type}>
+              <div className="text-sm clamp-line">{name}</div>
+              <div className="flex items-end gap-2">
+                <div>
+                  <RatingWidget rate={stars} />
+                </div>
+                <a href="#" className="text-sm text-blue-500">
+                  {comments}
+                </a>
               </div>
-              <a href="#" className="text-sm text-blue-500">
-                {comments}
-              </a>
-            </div>
-            <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
-          </ContentWrap>
-        </Wrap>
+              <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
+            </ContentWrap>
+          </Wrap>
+        </a>
       </Link>
     </Results>
   );

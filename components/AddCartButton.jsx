@@ -3,7 +3,7 @@ import { useMutation } from "@apollo/client";
 import { ADD_ITEM_CART, CREATE_CART } from "queries/queries";
 import { useCookies } from "react-cookie";
 
-const AddCart = ({ variantId, quantity }) => {
+export const useAddCart = () => {
   const [createCart, { data }] = useMutation(CREATE_CART);
   const [addItemCart] = useMutation(ADD_ITEM_CART);
   const [cookies, setCookie] = useCookies(["cart"]);
@@ -44,6 +44,12 @@ const AddCart = ({ variantId, quantity }) => {
       setCookie("cart", data.checkoutCreate.checkout.id, { path: "/" });
     }
   }, [data]);
+
+  return { addToCartHandler };
+};
+
+const AddCart = ({ variantId, quantity }) => {
+  const { addToCartHandler } = useAddCart();
 
   const handleClick = () => {
     addToCartHandler(variantId, quantity);

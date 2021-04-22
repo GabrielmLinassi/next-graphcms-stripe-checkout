@@ -19,6 +19,7 @@ html,
 body {
   @apply bg-gray-50;
   font-family: Roboto, sans-serif;
+  height: 100vh;
 }
 
 a {
@@ -28,6 +29,10 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+#__next {
+  height: 100%;
 }
 
 /* .ais-Hits {

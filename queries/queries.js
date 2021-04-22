@@ -55,6 +55,21 @@ export const GET_CART = gql`
   }
 `;
 
+export const GET_CHECKOUT_LINE_ITEMS = gql`
+  query getCheckoutLineItems($ids: [ID!]!) {
+    nodes(ids: $ids) {
+      ... on CheckoutLineItem {
+        quantity
+        variant {
+          priceV2 {
+            amount
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const REMOVE_ITEM_CART = gql`
   mutation checkoutLineItemsRemove($lineItemIds: [ID!]!, $checkoutId: ID!) {
     checkoutLineItemsRemove(lineItemIds: $lineItemIds, checkoutId: $checkoutId) {
