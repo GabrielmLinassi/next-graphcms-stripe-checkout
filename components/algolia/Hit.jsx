@@ -42,12 +42,12 @@ const Results = connectStateResults(({ searchState, searchResults, children }) =
 export const Hit = ({ hit: { objectID, name, price, slug, images, stars, comments }, type }) => {
   return (
     <Results>
-      <Link key={objectID} href={`/products/${slug}`}>
-        <a target="_blank" rel="noreferrer">
-          <Wrap isList={type === "list"}>
-            <ImageWrap type={type}>
-              <Carousel images={images} />
-            </ImageWrap>
+      <Wrap isList={type === "list"}>
+        <ImageWrap type={type}>
+          <Carousel images={images} />
+        </ImageWrap>
+        <Link key={objectID} href={`/products/${slug}`}>
+          <a target="_blank" rel="noreferrer">
             <ContentWrap type={type}>
               <div className="text-sm clamp-line">{name}</div>
               <div className="flex items-end gap-2">
@@ -60,9 +60,9 @@ export const Hit = ({ hit: { objectID, name, price, slug, images, stars, comment
               </div>
               <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
             </ContentWrap>
-          </Wrap>
-        </a>
-      </Link>
+          </a>
+        </Link>
+      </Wrap>
     </Results>
   );
 };
