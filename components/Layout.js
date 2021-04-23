@@ -18,7 +18,7 @@ export default function Layout({ children, title }) {
         <header className="bg-yellow-200 text-black shadow-md">
           <Navbar />
         </header>
-        <main tw="max-w-6xl m-auto">{children}</main>
+        <main tw="max-w-6xl m-auto w-full my-10">{children}</main>
         <div tw="bg-yellow-200 text-lg">
           <div tw="max-w-6xl m-auto flex items-center justify-end h-full">
             <a href="#">

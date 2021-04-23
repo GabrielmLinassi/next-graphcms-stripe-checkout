@@ -1,38 +1,24 @@
 import styled from "styled-components";
+import Link from "next/link";
+import { connectStateResults } from "react-instantsearch-dom";
+import tw from "twin.macro";
+
 import RatingWidget from "components/RatingWidget";
 import Carousel from "components/carousel/Carousel";
-import Link from "next/link";
 import { formatPrice } from "components/helper";
-import Skeleton from "react-loading-skeleton";
-import { connectStateResults } from "react-instantsearch-dom";
 
 const Wrap = styled.div`
-  display: ${({ isList }) => (isList ? "flex" : "block")};
-  gap: ${({ isList }) => (isList ? "1rem" : "0")};
-
-  width: 100%;
+  ${({ isList }) => isList && tw`grid grid-template-columns[200px 1fr] gap-4`}
 `;
 
 const ImageWrap = styled.div`
-  padding: 1rem;
-
-  ${({ type }) =>
-    type === "list" &&
-    ` width: 200px;
-        box-sizing: content-box;
-        border-right: solid 1px rgba(0, 0, 0, 0.1);
-      `}
-
-  ${({ type }) =>
-    type === "grid" &&
-    ` border-bottom: solid 1px rgba(0, 0, 0, 0.1); 
-        width: 100%;
-      `}
+  ${tw`p-4`}
+  ${({ type }) => type === "list" && tw`border-r`}
+  ${({ type }) => type === "grid" && tw`border-b`}
 `;
 
 const ContentWrap = styled.div`
-  ${({ type }) => (type === "list" ? `padding: 1rem 1rem 1rem 0;` : `padding: 1rem;`)}
-  width: 100%;
+  ${({ type }) => (type === "list" ? tw`py-4 px-4 pl-0` : tw`p-4`)}
 `;
 
 const Results = connectStateResults(({ searchState, searchResults, children }) =>
