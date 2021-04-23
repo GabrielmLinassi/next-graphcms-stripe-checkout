@@ -2,7 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 import Layout from "components/Layout";
-import { DisplayListTypes } from "components/DisplayListTypes";
+import DisplayListTypes from "components/DisplayListTypes";
 import { RangeSlider, RatingMenu, Pagination, Hits, Searchbox, Stats } from "components/algolia";
 
 /* --- --- --- */

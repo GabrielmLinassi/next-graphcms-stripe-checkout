@@ -10,7 +10,7 @@ S.Button = styled.button`
   }
 `;
 
-export const DisplayListTypes = ({ handleChange }) => {
+const DisplayListTypes = ({ handleChange }) => {
   return (
     <div tw="flex[0 0 50px]">
       <S.Button onClick={() => handleChange("list")}>
@@ -22,3 +22,5 @@ export const DisplayListTypes = ({ handleChange }) => {
     </div>
   );
 };
+
+export default DisplayListTypes;
