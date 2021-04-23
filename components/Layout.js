@@ -2,31 +2,32 @@ import Head from "next/head";
 import Link from "next/link";
 import React, { useState } from "react";
 import tw from "twin.macro";
-// import { Cart as CartIcon2 } from "components/icons/index";
+
 import { useAuth } from "contexts/auth";
 import { CartIcon } from "components/CartIcon";
-import Footer from "./layout/Footer";
 
 export default function Layout({ children, title }) {
   return (
-    <div tw="w-full h-full grid grid-template-rows[100px 1fr 100px]">
+    <>
       <Head>
         <title>{title}</title>
         <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
-      <header className="bg-yellow-200 text-black shadow-md">
-        <Navbar />
-      </header>
-      <main tw="max-w-6xl m-auto my-10 w-full h-full">{children}</main>
-      <div className="bg-yellow-200 text-lg">
-        <div tw="max-w-6xl m-auto flex items-center justify-end h-full">
-          <a href="#">
-            Made by <b>Gabriel Linassi</b>
-          </a>
+      <div tw="w-full h-full grid grid-template-rows[100px 1fr 100px]">
+        <header className="bg-yellow-200 text-black shadow-md">
+          <Navbar />
+        </header>
+        <main tw="max-w-6xl m-auto">{children}</main>
+        <div tw="bg-yellow-200 text-lg">
+          <div tw="max-w-6xl m-auto flex items-center justify-end h-full">
+            <a href="#">
+              Made by <b>Gabriel Linassi</b>
+            </a>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

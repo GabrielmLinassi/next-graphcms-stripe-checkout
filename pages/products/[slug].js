@@ -67,7 +67,7 @@ const ProductPage = ({ product }) => {
   return (
     <Layout>
       <BackBtn />
-      <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3 w-full h-full">
+      <div className="bg-white text-xl text-center rounded-md shadow-sm p-5 mt-3 ">
         <div className="flex w-full h-full">
           <div className="w-full h-full">
             <Carousel images={allImages.map((image) => image.src)} withThumbs={true} />
@@ -92,7 +92,7 @@ const ProductPage = ({ product }) => {
             <AddCart variantId={variantId} quantity={quantity} />
           </div>
         </div>
-        <div className="mt-16 text-lg">{description}</div>
+        <div className="text-lg">{description}</div>
       </div>
     </Layout>
   );
