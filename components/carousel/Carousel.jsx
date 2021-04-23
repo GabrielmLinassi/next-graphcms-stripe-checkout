@@ -1,12 +1,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useSpringCarousel } from "react-spring-carousel-js";
+import tw from "twin.macro";
 
 import CarouselItem from "./CarouselItem";
 import CarouselThumbItem from "./CarouselThumbItem";
 import CarouselWrapper from "./CarouselWrapper";
 import ThumbsWrapper from "./ThumbsWrapper";
 import ArrowButton from "./ArrowButton";
+import ConditionalWrap from "components/ConditionalWrap";
 
 const Carousel = ({ images, withThumbs = false }) => {
   const [isFirst, setFirst] = useState(true);
@@ -51,30 +53,22 @@ const Carousel = ({ images, withThumbs = false }) => {
     setCurrent(data.currentItem);
   });
 
-  const Wrapper = withThumbs
-    ? ({ children }) => (
-        <div
-          style={{
-            display: "flex",
-            flexFlow: "row-reverse",
-            height: "425px",
-            gap: ".25rem",
-          }}
-        >
+  return (
+    <ConditionalWrap
+      condition={withThumbs}
+      wrap={(children) => (
+        <div tw="flex flex-row-reverse gap-1 height[425px]">
           {children}
           <ThumbsWrapper>{thumbsFragment}</ThumbsWrapper>
         </div>
-      )
-    : ({ children }) => <>{children}</>;
-
-  return (
-    <Wrapper>
+      )}
+    >
       <CarouselWrapper>
         <ArrowButton type="prev" isVisible={!isFirst} onClick={slideToPrevItem} />
         {carouselFragment}
         <ArrowButton type="next" isVisible={!isLast} onClick={slideToNextItem} />
       </CarouselWrapper>
-    </Wrapper>
+    </ConditionalWrap>
   );
 };
 
