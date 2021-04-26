@@ -7,7 +7,7 @@ const PayButton = ({ variantId, quantity }) => {
   const router = useRouter();
 
   const handleClick = () => {
-    addToCartHandler(variantId, quantity);
+    // addToCartHandler(variantId, quantity);
     router.push("/checkout");
   };
 

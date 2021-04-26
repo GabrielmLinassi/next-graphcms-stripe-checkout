@@ -22,6 +22,27 @@ export const CREATE_CART = gql`
   }
 `;
 
+export const ASSOCIATE_CUSTOMER_CART = gql`
+  mutation checkoutCustomerAssociateV2($checkoutId: ID!, $customerAccessToken: String!) {
+    checkoutCustomerAssociateV2(
+      checkoutId: $checkoutId
+      customerAccessToken: $customerAccessToken
+    ) {
+      checkout {
+        id
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
+      }
+      customer {
+        id
+      }
+    }
+  }
+`;
+
 export const GET_CART = gql`
   query getCheckout($id: ID!) {
     node(id: $id) {
@@ -156,6 +177,112 @@ export const PRODUCTS_BY_ID = gql`
             }
           }
         }
+      }
+    }
+  }
+`;
+
+export const LOGIN = gql`
+  mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
+    customerAccessTokenCreate(input: $input) {
+      customerAccessToken {
+        accessToken
+        expiresAt
+      }
+      customerUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const COMPLETE_CHECKOUT_WITH_TOKEN = gql`
+  mutation checkoutCompleteWithTokenizedPaymentV3(
+    $checkoutId: ID!
+    $payment: TokenizedPaymentInputV3!
+  ) {
+    checkoutCompleteWithTokenizedPaymentV3(checkoutId: $checkoutId, payment: $payment) {
+      checkout {
+        id
+        orderStatusUrl
+        order {
+          fulfillmentStatus
+          successfulFulfillments {
+            fulfillmentLineItems {
+              edges {
+                node {
+                  lineItem {
+                    title
+                    quantity
+                  }
+                  quantity
+                }
+              }
+            }
+          }
+        }
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
+      }
+      payment {
+        id
+      }
+    }
+  }
+`;
+
+export const CHECKOUT_SHIPPING_ADDRESS_UPDATE = gql`
+  mutation checkoutShippingAddressUpdateV2(
+    $shippingAddress: MailingAddressInput!
+    $checkoutId: ID!
+  ) {
+    checkoutShippingAddressUpdateV2(shippingAddress: $shippingAddress, checkoutId: $checkoutId) {
+      checkout {
+        id
+        availableShippingRates {
+          ready
+          shippingRates {
+            handle
+            priceV2 {
+              amount
+              currencyCode
+            }
+            title
+          }
+        }
+        shippingLine {
+          handle
+          priceV2 {
+            amount
+            currencyCode
+          }
+          title
+        }
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
+      }
+    }
+  }
+`;
+
+export const CHECKOUT_SHIPPING_LINE_UPDATE = gql`
+  mutation checkoutShippingLineUpdate($checkoutId: ID!, $shippingRateHandle: String!) {
+    checkoutShippingLineUpdate(checkoutId: $checkoutId, shippingRateHandle: $shippingRateHandle) {
+      checkout {
+        id
+      }
+      checkoutUserErrors {
+        code
+        field
+        message
       }
     }
   }
