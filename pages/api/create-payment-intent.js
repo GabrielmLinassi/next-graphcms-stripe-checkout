@@ -15,7 +15,7 @@ export default async function createPaymentIntent(req, res) {
 
   const paymentIntent = await stripe.paymentIntents.create({
     amount: data.node.lineItemsSubtotalPrice.amount * 100,
-    currency: "usd",
+    currency: "brl",
   });
 
   res.send({
