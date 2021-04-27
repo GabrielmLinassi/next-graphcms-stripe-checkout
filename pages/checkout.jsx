@@ -100,7 +100,7 @@ const CheckoutForm = () => {
                   amount: payload.paymentIntent.amount / 100,
                   currencyCode: "BRL",
                 },
-                idempotencyKey: payload.paymentIntent.id,
+                idempotencyKey: "123",
                 billingAddress: {
                   address1: "Rua Almirante Barroso, 204",
                   city: "Palmitinho",
@@ -110,7 +110,7 @@ const CheckoutForm = () => {
                   lastName: "Linassi",
                 },
                 paymentData: result.token.id,
-                type: "VAULT",
+                type: "SHOPIFY_PAY",
                 test: true,
               },
             },
