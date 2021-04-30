@@ -19,6 +19,7 @@ module.exports = {
       "s.gravatar.com",
       "images-na.ssl-images-amazon.com",
       "cdn.shopify.com",
+      "cdn.chec.io",
     ],
   },
   env: {

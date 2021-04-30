@@ -1,13 +1,10 @@
 import { useRouter } from "next/router";
-import { useAddCart } from "components/AddCartButton";
 import tw from "twin.macro";
 
-const PayButton = ({ variantId, quantity }) => {
-  const { addToCartHandler } = useAddCart();
+const PayButton = () => {
   const router = useRouter();
 
   const handleClick = () => {
-    // addToCartHandler(variantId, quantity);
     router.push("/checkout");
   };
 

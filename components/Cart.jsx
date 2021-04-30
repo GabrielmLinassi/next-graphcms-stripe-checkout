@@ -1,103 +1,64 @@
-import { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import { useMutation, useQuery } from "@apollo/client";
 import tw from "twin.macro";
 
 import { CartLayout } from "components/CartLayout";
-import { GET_CART, REMOVE_ITEM_CART, UPDATE_ITEM_CART } from "queries/queries";
-
-/* --- --- --- */
-
-export const useCartItem = () => {
-  const [cookies, setCookie] = useCookies(["cart"]);
-  const { data, loading, error } = useQuery(GET_CART, {
-    variables: {
-      id: cookies.cart,
-    },
-  });
-
-  return { data, loading, error };
-};
+import { retrieveCart, emptyCart, updateItemCart, deleteItemCart } from "libs/commercejs";
 
 export default function Cart() {
-  const { data, loading, error } = useCartItem();
+  const [cookies, setCookie] = useCookies(["cartId"]);
+  const [cart, setCart] = useState();
+  const [isLoading, setLoading] = useState(true);
+  const router = useRouter();
 
-  const [removeItemCart, { data: itemRemoved }] = useMutation(REMOVE_ITEM_CART);
-  const [updateItemCart] = useMutation(UPDATE_ITEM_CART);
+  useEffect(async () => {
+    if (cookies?.cartId) {
+      const { data, error } = await retrieveCart(cookies.cartId);
 
-  const handleRemove = (itemId, checkoutId) => {
-    removeItemCart({
-      variables: {
-        lineItemIds: [itemId],
-        checkoutId: checkoutId,
-      },
-    });
-  };
+      if (error) {
+        console.log({ error });
+        return;
+      }
 
-  const adjustQnty = ({ id, variantId, quantity, checkoutId, type }) => {
-    updateItemCart({
-      variables: {
-        lineItems: [
-          {
-            id,
-            variantId,
-            quantity: type === "inc" ? quantity + 1 : quantity - 1,
-          },
-        ],
-        checkoutId,
-      },
-    });
-  };
+      setCart(data);
+      setLoading(false);
+    }
+  }, [cookies]);
 
-  if (loading) {
+  useEffect(() => {
+    console.log({ cart });
+  }, [cart]);
+
+  if (isLoading) {
     return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {JSON.stringify(error, null, 2)}</div>;
   }
 
   return (
     <CartLayout>
-      {data.node.lineItems.edges.map(({ node: { id, title, quantity, variant } }) => (
+      {cart.line_items.map(({ id, product_id, name, quantity, line_total: { raw } }) => (
         <div tw="text-left border-2 border-black p-3 my-1">
           <div>
-            <b>Item:</b> {title}
+            <b>Item:</b> {name}
           </div>
           <div>
             <b>Quantity:</b> {quantity}
           </div>
           <div>
-            <b>Price $:</b> {variant.priceV2.amount}
+            <b>Price $:</b> {raw}
           </div>
           <div tw="flex gap-1">
-            <button onClick={() => handleRemove(id, data.node.id)} tw="bg-red-500 px-4 py-2">
+            <button onClick={() => deleteItemCart(cart.id, id)} tw="bg-red-500 px-4 py-2">
               Remove Item
             </button>
             <button
-              onClick={() =>
-                adjustQnty({
-                  id: id,
-                  variantId: variant.id,
-                  quantity: quantity,
-                  checkoutId: data.node.id,
-                  type: "dec",
-                })
-              }
+              onClick={() => updateItemCart(cart.id, id, quantity - 1)}
               tw="border border-black px-4 py-2"
             >
               Decrease 1
             </button>
             <button
-              onClick={() =>
-                adjustQnty({
-                  id: id,
-                  variantId: variant.id,
-                  quantity: quantity,
-                  checkoutId: data.node.id,
-                  type: "inc",
-                })
-              }
+              onClick={() => updateItemCart(cart.id, id, quantity + 1)}
               tw="border border-black px-4 py-2"
             >
               Increment 1
@@ -106,7 +67,15 @@ export default function Cart() {
         </div>
       ))}
       <div tw="text-left">
-        <b>Total $:</b> {data.node.lineItemsSubtotalPrice.amount}
+        <b>Total $:</b> {cart.subtotal.raw}
+      </div>
+      <div tw="flex gap-2 mt-3">
+        <button tw="bg-yellow-500 px-4 py-2" onClick={() => emptyCart(cart.id)}>
+          Clear Cart
+        </button>
+        <button tw="bg-yellow-500 px-4 py-2" onClick={() => router.push("/checkout")}>
+          Checkout
+        </button>
       </div>
     </CartLayout>
   );

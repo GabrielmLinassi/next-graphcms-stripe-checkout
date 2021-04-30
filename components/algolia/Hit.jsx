@@ -18,21 +18,24 @@ const ImageWrap = styled.div`
 `;
 
 const ContentWrap = styled.div`
-  ${({ type }) => (type === "list" ? tw`py-4 px-4 pl-0` : tw`p-4`)}
+  ${({ type }) => (type === "list" ? tw`px-4 py-4 pl-0` : tw`p-4`)}
 `;
 
 const Results = connectStateResults(({ searchState, searchResults, children }) =>
   searchResults && searchResults.nbHits !== 0 ? children : <div>loading...</div>
 );
 
-export const Hit = ({ hit: { objectID, name, price, slug, images, stars, comments }, type }) => {
+export const Hit = ({
+  hit: { objectID, name, price, slug, commercejsId, images, stars, comments },
+  type,
+}) => {
   return (
     <Results>
       <Wrap isList={type === "list"}>
         <ImageWrap type={type}>
           <Carousel images={images} />
         </ImageWrap>
-        <Link key={objectID} href={`/products/${slug}`}>
+        <Link key={objectID} href={`/products/${commercejsId}`}>
           <a target="_blank" rel="noreferrer">
             <ContentWrap type={type}>
               <div className="text-sm clamp-line">{name}</div>
@@ -44,7 +47,7 @@ export const Hit = ({ hit: { objectID, name, price, slug, images, stars, comment
                   {comments}
                 </a>
               </div>
-              <div className="font-bold mt-2 text-xl">{formatPrice(price)}</div>
+              <div className="mt-2 text-xl font-bold">{formatPrice(price)}</div>
             </ContentWrap>
           </a>
         </Link>

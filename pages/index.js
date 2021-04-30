@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 import Layout from "components/Layout";
 import DisplayListTypes from "components/DisplayListTypes";
 import { RangeSlider, RatingMenu, Pagination, Hits, Searchbox, Stats } from "components/algolia";
+import { createCart } from "libs/commercejs";
 
 /* --- --- --- */
 
@@ -35,6 +36,11 @@ S.Wrap = styled.div`
 
 export default function Home() {
   const [type, setType] = useState("grid");
+
+  useEffect(async () => {
+    const cart = await createCart();
+    console.log(cart);
+  }, []);
 
   return (
     <Layout title="NextJS GraphCMS Stripe Checkout">

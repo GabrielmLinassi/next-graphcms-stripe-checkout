@@ -1,24 +1,17 @@
-import { initializeApollo } from "libs/apollo";
 import { stripe } from "libs/stripe";
-import { GET_CART } from "queries/queries";
+import { retrieveCart } from "libs/commercejs";
 
 export default async function createPaymentIntent(req, res) {
-  const apolloClient = initializeApollo();
   const { checkoutId } = req.body;
-
-  const { data } = await apolloClient.query({
-    query: GET_CART,
-    variables: {
-      id: checkoutId,
-    },
-  });
+  const { data } = await retrieveCart(checkoutId);
 
   const paymentIntent = await stripe.paymentIntents.create({
-    amount: data.node.lineItemsSubtotalPrice.amount * 100,
-    currency: "brl",
+    amount: data.subtotal.raw * 100,
+    currency: "usd",
   });
 
   res.send({
+    paymentIntentId: paymentIntent.id,
     clientSecret: paymentIntent.client_secret,
   });
 }

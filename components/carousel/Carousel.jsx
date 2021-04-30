@@ -11,6 +11,7 @@ import ArrowButton from "./ArrowButton";
 import ConditionalWrap from "components/ConditionalWrap";
 
 const Carousel = ({ images, withThumbs = false }) => {
+  console.log({ images });
   const [isFirst, setFirst] = useState(true);
   const [isLast, setLast] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -31,6 +32,7 @@ const Carousel = ({ images, withThumbs = false }) => {
         <CarouselItem>
           <Image
             src={image}
+            unoptimized={true}
             width={400}
             height={400}
             layout="responsive"
@@ -41,7 +43,7 @@ const Carousel = ({ images, withThumbs = false }) => {
       ),
       renderThumb: (
         <CarouselThumbItem onClick={() => slideToItem(index)} isActive={current === index}>
-          <Image src={image} width={150} height={150} />
+          <Image src={image} width={150} height={150} unoptimized={true} />
         </CarouselThumbItem>
       ),
     })),
