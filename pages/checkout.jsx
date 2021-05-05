@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CardElement, Elements, useStripe, useElements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useCookies } from "react-cookie";
@@ -21,12 +21,20 @@ const CheckoutForm = () => {
     clientSecret: "",
     paymentIntentId: null,
   });
-  const [customerId, setCustomerId] = useState();
+  const [finished, setFinished] = useState(false);
+
   const stripe = useStripe();
   const elements = useElements();
   const [cookies, setCookie, removeCookie] = useCookies(["cartId"]);
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, customerId } = useAuth();
+
+  useEffect(() => {
+    if (finished) {
+      console.log("finished...");
+      removeCookie("cartId");
+    }
+  }, [finished]);
 
   const handleChange = async (e) => {
     setState((prevState) => ({
@@ -72,16 +80,23 @@ const CheckoutForm = () => {
       } else {
         const { data: checkout } = await createCheckout(cookies.cartId);
 
-        const { data: order } = await createOrder(checkout.id, customerId, {
-          stripe: {
-            cardToken: result.token.id,
-            paymentMethodId: paymentMethod.id,
+        const { data: order } = await createOrder(
+          checkout.id,
+          {
+            user,
+            customerId,
           },
-        });
+          {
+            stripe: {
+              cardToken: result.token.id,
+              paymentMethodId: paymentMethod.id,
+            },
+          }
+        );
 
         setCookie("orderId", order.id);
-        removeCookie("cartId");
-        router.push("/success");
+        setFinished(true);
+        // router.push("/success");
       }
     });
   };

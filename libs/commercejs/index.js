@@ -33,15 +33,14 @@ export const issueJwtToken = (customerId) => {
 
 export const createOrder = (
   checkoutId,
-  customerId,
+  { user, customerId },
   { stripe: { cardToken, paymentMethodId, paymentIntentId } }
 ) => {
   return api.post(`/checkouts/${checkoutId}`, {
     customer: {
-      // id: customerId,
-      firstname: "Gabriel",
-      lastname: "Linassi",
-      email: "sample@sample.com",
+      email: user.name,
+      firstname: user.nickname,
+      lastname: user.nickname,
     },
     shipping: {
       name: "Gabriel",
