@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useAuth } from "contexts/auth";
-import { issueToken, listOrders } from "libs/commercejs";
+import { listOrders } from "libs/commercejs";
 
 const Orders = () => {
   const { user, customerId } = useAuth();

@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import tw from "twin.macro";
 
@@ -15,7 +16,7 @@ export default function Layout({ children, title }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div tw="w-full h-full grid grid-template-rows[100px 1fr 100px]">
-        <header className="bg-yellow-200 text-black shadow-md">
+        <header className="text-black bg-yellow-200 shadow-md">
           <Navbar />
         </header>
         <main tw="max-w-6xl m-auto w-full my-10">{children}</main>
@@ -34,6 +35,7 @@ export default function Layout({ children, title }) {
 const Navbar = () => {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <nav tw="h-full flex items-center justify-between max-w-6xl m-auto">
@@ -49,13 +51,13 @@ const Navbar = () => {
         <li>
           {user ? (
             <div className="flex items-center">
-              <div className="flex justify-center items-center p-5">
+              <div className="flex items-center justify-center p-5">
                 <div className="relative">
                   <button
                     onClick={() => setOpen(!open)}
-                    className="block h-12 w-12 rounded-full overflow-hidden focus:outline-none"
+                    className="block w-12 h-12 overflow-hidden rounded-full focus:outline-none"
                   >
-                    <img className="h-full w-full object-cover" src={user.picture} alt="avatar" />
+                    <img className="object-cover w-full h-full" src={user.picture} alt="avatar" />
                   </button>
                   <div
                     className={`${
@@ -71,11 +73,13 @@ const Navbar = () => {
               </div>
             </div>
           ) : (
-            <Link href="/api/login">
-              <a className="border border-blue-500 px-4 py-2 rounded-md text-blue-500 hover:bg-blue-500 hover:text-white">
-                Login
-              </a>
-            </Link>
+            <SampleButton
+              onClick={() => {
+                router.push(`/api/login?redirect-to=${router.asPath}`);
+              }}
+            >
+              Login
+            </SampleButton>
           )}
         </li>
       </ul>
@@ -83,9 +87,18 @@ const Navbar = () => {
   );
 };
 
+const SampleButton = ({ children, onClick }) => (
+  <button
+    onClick={onClick}
+    tw="border border-blue-500 px-4 py-2 rounded-md text-blue-500 hover:bg-blue-500 hover:text-white"
+  >
+    {children}
+  </button>
+);
+
 const NavLink = ({ path, title }) => (
   <Link href={path}>
-    <a className="transition-colors duration-200 block px-4 py-2 text-normal text-gray-900 rounded hover:bg-purple-500 hover:text-white">
+    <a className="block px-4 py-2 text-gray-900 transition-colors duration-200 rounded text-normal hover:bg-purple-500 hover:text-white">
       {title}
     </a>
   </Link>
