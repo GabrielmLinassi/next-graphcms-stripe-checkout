@@ -38,8 +38,7 @@ export default function Home() {
   const [type, setType] = useState("grid");
 
   useEffect(async () => {
-    const cart = await createCart();
-    console.log(cart);
+    await createCart();
   }, []);
 
   return (

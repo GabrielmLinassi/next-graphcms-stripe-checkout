@@ -18,7 +18,6 @@ const AddCart = ({ variantId, quantity }) => {
   }, [cookies]);
 
   useEffect(() => {
-    console.log({ cart });
     if (cart?.id) {
       setCookie("cartId", cart.id, { path: "/" });
     }

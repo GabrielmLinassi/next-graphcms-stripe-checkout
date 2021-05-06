@@ -26,10 +26,6 @@ export default function Cart() {
     }
   }, [cookies]);
 
-  useEffect(() => {
-    console.log({ cart });
-  }, [cart]);
-
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -37,7 +33,7 @@ export default function Cart() {
   return (
     <CartLayout>
       {cart.line_items.map(({ id, product_id, name, quantity, line_total: { raw } }) => (
-        <div tw="text-left border-2 border-black p-3 my-1">
+        <div key={id} tw="text-left border-2 border-black p-3 my-1">
           <div>
             <b>Item:</b> {name}
           </div>

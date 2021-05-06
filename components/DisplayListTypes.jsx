@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Grid as GridIcon, List as ListIcon } from "components/icons/index";
-import { createContext, useState } from "react";
 import tw from "twin.macro";
 
 const S = {};

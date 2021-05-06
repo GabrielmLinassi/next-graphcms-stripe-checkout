@@ -1,9 +1,5 @@
-const ThumbsWrapper = ({ children }) => {
-  return (
-    <div className="" style={{ height: "100%", width: "150px" }}>
-      {children}
-    </div>
-  );
-};
+import tw from "twin.macro";
+
+const ThumbsWrapper = ({ children }) => <div tw="width[150px] h-full">{children}</div>;
 
 export default ThumbsWrapper;

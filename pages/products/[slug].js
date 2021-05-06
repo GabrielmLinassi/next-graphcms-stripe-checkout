@@ -36,7 +36,6 @@ const ProductPage = ({ product }) => {
     src: asset.url,
     fileName: asset.filename,
   }));
-  console.log({ allImages });
 
   const [quantity, setQuantity] = useState(1);
 

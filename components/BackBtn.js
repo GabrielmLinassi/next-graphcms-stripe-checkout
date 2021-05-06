@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function BackBtn({ title = "Back" }) {
   return (
     <Link href="/">
-      <a className="inline-flex items-center px-3 py-1 rounded-md cursor-pointer bg-gray-200 hover:bg-gray-300 text-gray-700">
+      <a className="inline-flex items-center px-3 py-1 text-gray-700 bg-gray-200 rounded-md cursor-pointer hover:bg-gray-300">
         <IconLeft />
         <span className="ml-2">{title}</span>
       </a>
@@ -18,7 +18,7 @@ const IconLeft = () => {
       aria-hidden="true"
       data-prefix="fas"
       data-icon="arrow-left"
-      className="svg-inline--fa fa-arrow-left fa-w-14 w-4 h-4"
+      className="w-4 h-4 svg-inline--fa fa-arrow-left fa-w-14"
       viewBox="0 0 448 512"
     >
       <path

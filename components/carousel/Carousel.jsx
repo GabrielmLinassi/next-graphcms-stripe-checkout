@@ -11,7 +11,6 @@ import ArrowButton from "./ArrowButton";
 import ConditionalWrap from "components/ConditionalWrap";
 
 const Carousel = ({ images, withThumbs = false }) => {
-  console.log({ images });
   const [isFirst, setFirst] = useState(true);
   const [isLast, setLast] = useState(false);
   const [current, setCurrent] = useState(0);

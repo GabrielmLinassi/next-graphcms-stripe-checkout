@@ -37,8 +37,6 @@ const Results = connectStateResults(({ searchState, searchResults, children }) =
             <Skeleton height={250} tw="" />
             <Skeleton height={100} />
           </div>
-          {/* <Skeleton height={15} width={150} />
-          <Skeleton height={25} width={50} style={{ display: "block" }} /> */}
         </div>
       ))}
     </div>

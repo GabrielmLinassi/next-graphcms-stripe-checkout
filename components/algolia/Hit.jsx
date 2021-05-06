@@ -36,7 +36,7 @@ export const Hit = ({
           <Carousel images={images} />
         </ImageWrap>
         <Link key={objectID} href={`/products/${commercejsId}`}>
-          <a target="_blank" rel="noreferrer">
+          <a>
             <ContentWrap type={type}>
               <div className="text-sm clamp-line">{name}</div>
               <div className="flex items-end gap-2">
@@ -59,8 +59,6 @@ export const Hit = ({
 export async function getStaticProps() {
   const res = await fetch("/api/shopify/products");
   const products = await res.json();
-
-  console.log("getStaticProps", products);
 
   return {
     props: {

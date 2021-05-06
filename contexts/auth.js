@@ -26,10 +26,6 @@ function AuthProvider({ children }) {
     getUser();
   }, [pathname]);
 
-  useEffect(() => {
-    console.log({ customerId });
-  }, [customerId]);
-
   useEffect(async () => {
     if (user) {
       let customerId = null;
