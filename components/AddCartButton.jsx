@@ -27,10 +27,13 @@ const AddCart = ({ variantId, quantity }) => {
     let _cartId = null;
     if (!cookies.cartId) {
       const { data } = await createCart();
-      _cartId = data.data.id;
+
+      console.log({ data });
+
+      _cartId = data.id;
       setCart((prevState) => ({
         ...prevState,
-        id: data.data.id,
+        id: data.id,
       }));
     }
 

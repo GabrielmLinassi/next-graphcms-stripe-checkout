@@ -1,14 +1,16 @@
 import { useState } from "react";
+
+import api from "pages/api/utils/api";
+
 import PayButton from "components/PayBtn";
 import Layout from "components/Layout";
 import BackBtn from "components/BackBtn";
 import Carousel from "components/carousel/Carousel";
 import AddCart from "components/AddCartButton";
 import Amount from "components/AmountButton";
-import { getAllProducts, getProduct } from "libs/commercejs";
 
 export async function getStaticPaths() {
-  const { data } = await getAllProducts();
+  const { data } = await api.get("/products?limit=250");
   const slugs = data.data.map((prod) => ({ params: { slug: prod.id } }));
 
   return {
@@ -18,7 +20,7 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ params }) {
-  const { data } = await getProduct(params.slug);
+  const { data } = await api.get(`/products/${params.slug}`);
 
   return {
     props: {

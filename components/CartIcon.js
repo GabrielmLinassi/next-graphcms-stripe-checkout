@@ -1,20 +1,30 @@
 import Link from "next/link";
-import { useContext } from "react";
-
-import { CartContext } from "contexts/CartProvider";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { retrieveCart } from "libs/commercejs";
 
 const CartIcon = () => {
-  // const { cart } = useContext(CartContext);
+  const [cookies] = useCookies(["cartId"]);
+  const [numOfItems, setNumOfItems] = useState(0);
+
+  useEffect(() => {
+    if (!cookies.cartId) {
+      return;
+    }
+
+    const fetchCart = async () => {
+      const { data } = await retrieveCart(cookies.cartId);
+      setNumOfItems(data.cart.total_unique_items);
+    };
+
+    fetchCart();
+  }, [cookies]);
 
   return (
     <Link href="/cart">
       <a>
         <div className="relative p-3">
-          {/* {cart?.length && (
-            <span className="absolute -left-3 top-1 bg-red-500 rounded-full w-5 h-5 flex items-center justify-center text-white">
-              {cart.length}
-            </span>
-          )} */}
+          {numOfItems} Products on Cart |
           <Icon />
         </div>
       </a>

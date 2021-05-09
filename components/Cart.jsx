@@ -21,7 +21,7 @@ export default function Cart() {
         return;
       }
 
-      setCart(data);
+      setCart(data.cart);
       setLoading(false);
     }
   }, [cookies]);

@@ -24,9 +24,11 @@ module.exports = {
   },
   env: {
     APP_URL: process.env.APP_URL,
-    GRAPHCMS_API: process.env.GRAPHCMS_API,
+
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
     STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY,
+
+    GRAPHCMS_API: process.env.GRAPHCMS_API,
     GRAPHCMS_MUTATION_TOKEN: process.env.GRAPHCMS_MUTATION_TOKEN,
     GRAPHCMS_PRODUCTION_TOKEN: process.env.GRAPHCMS_PRODUCTION_TOKEN,
 
@@ -37,5 +39,7 @@ module.exports = {
     AUTH0_REDIRECT_URI: process.env.AUTH0_REDIRECT_URI,
     AUTH0_LOGOUT_REDIRECT_URI: process.env.AUTH0_LOGOUT_REDIRECT_URI,
     AUTH0_COOKIE_SECRET: process.env.AUTH0_COOKIE_SECRET,
+
+    COMMERCEJS_SK_TEST: process.env.COMMERCEJS_SK_TEST,
   },
 };

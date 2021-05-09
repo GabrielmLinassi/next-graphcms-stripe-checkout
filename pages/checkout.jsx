@@ -80,19 +80,12 @@ const CheckoutForm = () => {
       } else {
         const { data: checkout } = await createCheckout(cookies.cartId);
 
-        const { data: order } = await createOrder(
-          checkout.id,
-          {
-            user,
-            customerId,
-          },
-          {
-            stripe: {
-              cardToken: result.token.id,
-              paymentMethodId: paymentMethod.id,
-            },
-          }
-        );
+        const { data: order } = await createOrder({
+          checkoutId: checkout.id,
+          user,
+          cardToken: result.token.id,
+          paymentMethodId: paymentMethod.id,
+        });
 
         setCookie("orderId", order.id);
         setFinished(true);
