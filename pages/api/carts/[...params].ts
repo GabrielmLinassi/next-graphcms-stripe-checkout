@@ -24,7 +24,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse<any>) {
     );
 
     if (error) {
-      return res.json({ error });
+      return res.json(error.response.data);
     }
 
     res.json(data.data);
