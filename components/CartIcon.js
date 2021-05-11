@@ -14,7 +14,7 @@ const CartIcon = () => {
 
     const fetchCart = async () => {
       const { data } = await retrieveCart(cookies.cartId);
-      setNumOfItems(data.cart.total_unique_items);
+      setNumOfItems(data.total_unique_items);
     };
 
     fetchCart();
