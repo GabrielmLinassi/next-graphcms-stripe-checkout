@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Image from "next/image";
+
 import { useSpringCarousel } from "react-spring-carousel-js";
 import tw from "twin.macro";
 
@@ -27,19 +27,7 @@ const Carousel = ({ images, withThumbs = false }) => {
     thumbsSlideAxis: "y",
     items: images.map((image, index) => ({
       id: index,
-      renderItem: (
-        <CarouselItem>
-          <Image
-            src={image}
-            unoptimized={true}
-            width={400}
-            height={400}
-            layout="responsive"
-            objectFit="contain"
-            sizes={[1000]}
-          />
-        </CarouselItem>
-      ),
+      renderItem: <CarouselItem image={image}></CarouselItem>,
       renderThumb: (
         <CarouselThumbItem onClick={() => slideToItem(index)} isActive={current === index}>
           <Image src={image} width={150} height={150} unoptimized={true} />

@@ -23,6 +23,7 @@
     "axios": "^0.21.1",
     "babel-plugin-macros": "^3.0.1",
     "babel-plugin-styled-components": "^1.12.0",
+    "cloudinary": "^1.25.1",
     "cors": "^2.8.5",
     "graphql": "^15.5.0",
     "graphql-request": "^3.4.0",
