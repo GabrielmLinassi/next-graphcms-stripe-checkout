@@ -14,9 +14,9 @@ const CarouselItem = ({ image }) => {
   const [url, setUrl] = useState(undefined);
 
   useEffect(() => {
-    const filename = getFilename(image);
+    const filename = image;
     axios.get(`/api/images/${filename}`).then(({ data }) => setUrl(data));
-  }, []);
+  }, [image]);
 
   if (!url) {
     return <div>loading...</div>;

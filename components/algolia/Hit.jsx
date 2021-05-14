@@ -6,6 +6,7 @@ import tw from "twin.macro";
 import RatingWidget from "components/RatingWidget";
 import Carousel from "components/carousel/Carousel";
 import { formatPrice } from "components/helper";
+import { getFilename } from "../../helpers";
 
 const Wrap = styled.div`
   ${({ isList }) => isList && tw`grid grid-template-columns[200px 1fr] gap-4`}
@@ -33,7 +34,7 @@ export const Hit = ({
     <Results>
       <Wrap isList={type === "list"}>
         <ImageWrap type={type}>
-          <Carousel images={images} />
+          <Carousel images={images.map((image) => getFilename(image))} />
         </ImageWrap>
         <Link key={objectID} href={`/products/${commercejsId}`}>
           <a>

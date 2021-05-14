@@ -47,7 +47,7 @@ const ProductPage = ({ product }) => {
       <div className="p-5 mt-3 text-xl text-center bg-white rounded-md shadow-sm ">
         <div className="flex w-full h-full">
           <div className="w-full h-full">
-            <Carousel images={allImages.map((image) => image.src)} withThumbs={true} />
+            <Carousel images={allImages.map((image) => image.fileName)} withThumbs={true} />
           </div>
           <div className="pl-5 ml-5 border-l" style={{ width: "100%", height: "100%" }}>
             <div className="text-left">{name}</div>

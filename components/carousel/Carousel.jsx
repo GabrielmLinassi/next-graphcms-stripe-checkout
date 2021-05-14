@@ -29,9 +29,11 @@ const Carousel = ({ images, withThumbs = false }) => {
       id: index,
       renderItem: <CarouselItem image={image}></CarouselItem>,
       renderThumb: (
-        <CarouselThumbItem onClick={() => slideToItem(index)} isActive={current === index}>
-          <Image src={image} width={150} height={150} unoptimized={true} />
-        </CarouselThumbItem>
+        <CarouselThumbItem
+          onClick={() => slideToItem(index)}
+          isActive={current === index}
+          image={image}
+        />
       ),
     })),
   });
